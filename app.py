@@ -18,3 +18,6 @@ db.init_app(app)
 def index():
     return 'Flask is working'
 
+# Run application
+if __name__ == '__main__':
+    app.run(debug=True)
