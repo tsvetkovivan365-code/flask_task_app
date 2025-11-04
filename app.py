@@ -9,3 +9,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 
 #Initializing the database extension with the application
 db.init_app(app)
+
+@app.route('/')
+def index():
+    return 'Flask is working'
+
