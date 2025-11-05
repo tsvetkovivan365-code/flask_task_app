@@ -14,7 +14,7 @@ roles_users = db.Table(
 # Defining the User model/table
 class User(db.Model, sqla.FsUserMixin):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(30), unique=True, nullable=False)
+    username = db.Column(db.String(30), unique=True, nullable=False)
     email = db.Column(db.String(25), unique=True, nullable=False)
 
     # Task relationship
@@ -30,9 +30,10 @@ class User(db.Model, sqla.FsUserMixin):
 # Defining the Task model/table
 class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(40), nullable=False)
-    description = db.Column(db.Text, nullable=True)
-    done = db.Column(db.Boolean, default=False, nullable=False)
+    title = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.String(500), nullable=True)
+    status = db.Column(db.String(12), default="To Do", nullable=False)
+    due_date = db.Column(db.DateTime, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     def __repr__(self):
