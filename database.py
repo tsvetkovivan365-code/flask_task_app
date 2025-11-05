@@ -16,7 +16,7 @@ class User(db.Model, sqla.FsUserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(30), unique=True, nullable=False)
     email = db.Column(db.String(25), unique=True, nullable=False)
-    password = db.Column(db.String(255), unique=True, nullable=False)
+    password_hash = db.Column(db.String(255), unique=True, nullable=False)
 
     # Task relationship
     tasks = db.relationship('Task', backref='owner', lazy='dynamic')
