@@ -7,7 +7,7 @@ db = SQLAlchemy()
 # Setting up roles_users association table 
 roles_users = db.Table(
     'roles_users',
-    db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
     db.Column('role_id', db.Integer, db.ForeignKey('role.id'))
 )
 
@@ -21,7 +21,7 @@ class User(db.Model, sqla.FsUserMixin):
     tasks = db.relationship('Task', backref='owner', lazy='dynamic')
 
     # Role relationship via association table
-    role = db.relationship('Role', secondary=roles_users, backref='users', lazy='dynamic')
+    role = db.relationship('Role', secondary=roles_users, backref=db.backref('users', lazy='dynamic'))
 
     def __repr__(self):
         return f'User {self.name}'
