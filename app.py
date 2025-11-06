@@ -14,10 +14,6 @@ load_dotenv()
 
 basedir = path.abspath(path.dirname(__file__))
 
-def uia_username_mapper(identity):
-    # we allow pretty much anything - but we bleach it.
-    return bleach.clean(identity, strip=True)
-
 # Configuring database URI
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + path.join(basedir, 'flask_app.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
