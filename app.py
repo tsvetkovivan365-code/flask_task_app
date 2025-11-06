@@ -3,7 +3,7 @@ from flask_security import Security, SQLAlchemyUserDatastore, current_user, auth
 from database import db, User, Task, Role
 from dotenv import load_dotenv
 from os import path, environ
-import secrets
+import bleach
 
 
 # Flask App Initialization
@@ -14,13 +14,19 @@ load_dotenv()
 
 basedir = path.abspath(path.dirname(__file__))
 
+def uia_username_mapper(identity):
+    # we allow pretty much anything - but we bleach it.
+    return bleach.clean(identity, strip=True)
+
 # Configuring database URI
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + path.join(basedir, 'flask_app.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = environ.get('SECRET_KEY')
 app.config['SECURITY_REGISTERABLE'] = True
 app.config['SECURITY_SEND_REGISTER_EMAIL'] = True
-app.config['SECURITY_PASSWORD_SALT'] = secrets.SystemRandom().getrandbits(300)
+app.config['SECURITY_PASSWORD_SALT'] = environ.get('PASSWORD_SALT')
+app.config['SECURITY_USERNAME_ENABLE'] = True
+app.config['SECURITY_USERNAME_REQUIRED'] = True
 
 #Initializing the database extension with the application
 db.init_app(app)
@@ -32,12 +38,9 @@ security = Security(app, user_datastore)
 @app.route('/')
 @auth_required()
 def home():
-    return render_template_string(f"Hello, {{current_user.email}}")
+    return render_template_string(f"Hello, {current_user.email}")
 
 
 # Run application
 if __name__ == '__main__':
-    with app.app_context():
-        db.session.drop_all()
-        db.session.create_all()
     app.run(debug=True)

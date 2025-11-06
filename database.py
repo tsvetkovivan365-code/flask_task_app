@@ -14,12 +14,13 @@ roles_users = db.Table(
 # Defining the User model/table
 class User(db.Model, sqla.FsUserMixin):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(30), unique=True, nullable=False)
+    name = db.Column(db.String(100), nullable=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(25), unique=True, nullable=False)
-    password_hash = db.Column(db.String(255), unique=True, nullable=False)
+    password = db.Column(db.String(255))
 
     # Task relationship
-    tasks = db.relationship('Task', backref='owner', lazy='dynamic')
+    tasks = db.relationship('Task', backref='user', lazy='dynamic')
 
     # Role relationship via association table
     role = db.relationship('Role', secondary=roles_users, backref=db.backref('user', lazy='dynamic'))
