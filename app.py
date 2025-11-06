@@ -3,6 +3,7 @@ from flask_security import Security, SQLAlchemyUserDatastore, current_user, auth
 from database import db, User, Task, Role
 from dotenv import load_dotenv
 from os import path, environ
+from flask_mail import Mail
 
 
 # Flask App Initialization
@@ -26,6 +27,9 @@ app.config['SECURITY_USERNAME_REQUIRED'] = True
 
 #Initializing the database extension with the application
 db.init_app(app)
+
+# Instantiating Mail from flask_email
+mail = Mail(app)
 
 # Setup Flask-Security
 user_datastore = SQLAlchemyUserDatastore(db, User, Role)
