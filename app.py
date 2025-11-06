@@ -3,7 +3,6 @@ from flask_security import Security, SQLAlchemyUserDatastore, current_user, auth
 from database import db, User, Task, Role
 from dotenv import load_dotenv
 from os import path, environ
-import bleach
 
 
 # Flask App Initialization
