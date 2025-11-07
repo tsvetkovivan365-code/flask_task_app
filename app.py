@@ -20,10 +20,10 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = environ.get('SECRET_KEY')
 app.config['SECURITY_REGISTERABLE'] = True
 app.config['SECURITY_SEND_REGISTER_EMAIL'] = True
-app.config['SECURITY_EMAIL_SENDER'] = environ.get('EMAIL_SENDER')
 app.config['SECURITY_PASSWORD_SALT'] = environ.get('PASSWORD_SALT')
 app.config['SECURITY_USERNAME_ENABLE'] = True
 app.config['SECURITY_USERNAME_REQUIRED'] = True
+app.config.from_pyfile('mail_config.cfg')
 
 #Initializing the database extension with the application
 db.init_app(app)
