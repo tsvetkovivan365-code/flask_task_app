@@ -1,4 +1,4 @@
-from flask import Flask, render_template_string
+from flask import Flask, render_template
 from flask_security import Security, SQLAlchemyUserDatastore, current_user, auth_required, hash_password
 from database import db, User, Task, Role
 from dotenv import load_dotenv
@@ -23,6 +23,7 @@ app.config['SECURITY_SEND_REGISTER_EMAIL'] = True
 app.config['SECURITY_PASSWORD_SALT'] = environ.get('PASSWORD_SALT')
 app.config['SECURITY_USERNAME_ENABLE'] = True
 app.config['SECURITY_USERNAME_REQUIRED'] = True
+app.config['SECURITY_EMAIL_HTML'] = True
 app.config.from_pyfile('mail_config.cfg')
 
 #Initializing the database extension with the application
@@ -38,7 +39,7 @@ security = Security(app, user_datastore)
 @app.route('/')
 @auth_required()
 def home():
-    return render_template_string(f"Hello, {current_user.email}")
+    return render_template(f"home.html")
 
 
 # Run application
