@@ -37,9 +37,8 @@ user_datastore = SQLAlchemyUserDatastore(db, User, Role)
 security = Security(app, user_datastore)
 
 @app.route('/')
-@auth_required()
 def home():
-    return render_template(f"home.html")
+    return render_template("home.html")
 
 
 # Run application

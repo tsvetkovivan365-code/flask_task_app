@@ -6,7 +6,31 @@
     <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/main.css')}}">
     <title>Document</title>
 </head>
-<body>
+<body class="bg-gray-300 min-h-screen font-sans">
+    <nav class="shadow-xl dark:bg-red-300 dark:text-black">
+        <section class="mx-auto px-4 sm:px-6 lg:px-8">
+            <section class="flex justify-around items-center h-16">
+                <a href="{{ url_for('home') }}" class="">
+                        Home
+                    </a>
+                    <a href="{{ url_for('home') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md font-medium transition duration-150">
+                        Dashboard
+                    </a>
+                    {% if current_user.is_authenticated %}
+                        <div class="flex items-center space-x-2">
+                             <span class="text-sm text-gray-500 hidden lg:inline">Hello, {{ current_user.username }}</span>
+                            <a href="{{ url_for('security.logout') }}" class="bg-red-500 hover:bg-red-600 text-white px-4 py-1.5 rounded-lg text-sm font-semibold transition duration-150 shadow-md">
+                                Logout
+                            </a>
+                        </div>
+                    {% else %}
+                        <a href="{{ url_for('security.login') }}" class="text-white hover:bg-blue-700 px-6 py-1.8 rounded-xl text-md font-semibold transition duration-150 shadow-md">
+                            Login / Register
+                        </a>
+                    {% endif %}
+            </section>
+        </section>
+    </nav>
     
 </body>
 </html>

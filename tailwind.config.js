@@ -1,11 +1,9 @@
 /** @type {import('tailwindcss').config} */
-module.exports = {
-    mode: "jit",
-    content: [
-        "./templates/*"
-    ],
-    theme: {
-        extend: {},
-    },
-    plugins: [],
-}
+export const mode = "jit";
+export const content = [
+    "./templates/*"
+];
+export const theme = {
+    extend: {},
+};
+export const plugins = [];
