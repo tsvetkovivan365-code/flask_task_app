@@ -4,3 +4,4 @@ __pycache__/
 flask_app.db
 .env
 mail_config.cfg
+node_modules/

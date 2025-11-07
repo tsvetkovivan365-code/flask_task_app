@@ -1,0 +1,10 @@
+/*! tailwindcss v4.1.17 | MIT License | https://tailwindcss.com */
+.static {
+  position: static;
+}
+.block {
+  display: block;
+}
+.table {
+  display: table;
+}
