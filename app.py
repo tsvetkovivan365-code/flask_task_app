@@ -1,5 +1,5 @@
 from flask import Flask, render_template
-from flask_security import Security, SQLAlchemyUserDatastore, current_user, auth_required, hash_password
+from flask_security import Security, SQLAlchemyUserDatastore, current_user, auth_required, hash_password, logout_user
 from database import db, User, Task, Role
 from dotenv import load_dotenv
 from os import path, environ
@@ -40,6 +40,14 @@ security = Security(app, user_datastore)
 def home():
     return render_template("home.html")
 
+@app.route('/dashboard')
+@auth_required()
+def dashboard():
+    return render_template('dashboard.html')
+
+@app.route('/logout')
+def logout():
+    return logout_user()
 
 # Run application
 if __name__ == '__main__':
