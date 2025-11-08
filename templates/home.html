@@ -7,24 +7,24 @@
     <title>Document</title>
 </head>
 <body class="bg-gray-300 min-h-screen font-sans">
-    <nav class="shadow-xl dark:bg-red-300">
-        <section class="mx-auto px-4 sm:px-6 lg:px-8">
+    <nav class="shadow-xl dark:bg-orange-400">
+        <section class="mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <section class="flex justify-center gap-x-15.5 text-2xl items-center h-16">
                 <a href="{{ url_for('home') }}" class="text-gray-700 hover:shadow-xl rounded-md font-medium transition duration-200">
                         Home
                     </a>
-                    <a href="{{ url_for('home') }}" class="text-gray-700 hover:shadow-xl rounded-md font-medium transition duration-200">
+                    <a href="{{ url_for('home') }}" class="text-gray-700 hover:shadow-xl font-medium transition duration-200">
                         Dashboard
                     </a>
                     {% if current_user.is_authenticated %}
-                        <div class="flex items-center space-x-2">
+                        <div class="flex items-center space-x-2" >
                              <span class="text-sm text-gray-500 hidden lg:inline">Hello, {{ current_user.username }}</span>
-                            <a href="{{ url_for('security.logout') }}" class="text-gray-700 hover:shadow-xl rounded-md font-medium transition duration-200">
+                            <a href="{{ url_for('security.logout') }}" class="text-gray-700 hover:shadow-xl font-medium transition duration-200">
                                 Logout
                             </a>
                         </div>
                     {% else %}
-                        <a href="{{ url_for('security.login') }}" class="text-gray-700 hover:shadow-xl px-6 py-1.8 rounded-xl text-md font-semibold transition duration-200">
+                        <a href="{{ url_for('security.login') }}" class="text-gray-700 hover:shadow-xl text-md font-medium transition duration-200">
                             Login / Register
                         </a>
                     {% endif %}
@@ -32,8 +32,8 @@
         </section>
     </nav>
     <main>
-        <section class='bg-red-600 content-center relative top-30 left-120 text-4xl inline-block py-59'>
-            <p>Welcome to your neighbourhood friendly Task Manager</p>
+        <section class='bg-red-600 rounded-3xl inline-block mx-auto max-w-3xl text-4xl py-59 px-10'>
+            <p>Welcome to your daily Task Manager</p>
         </section>
     </main>
     
