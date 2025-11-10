@@ -1,8 +1,9 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect, url_for
 from database import db, User, Task
 from dotenv import load_dotenv
 from os import path, environ
 from flask_mail import Mail
+from flask_login import LoginManager
 
 
 # Flask App Initialization
@@ -24,6 +25,17 @@ db.init_app(app)
 
 # Instantiating Mail from flask_email
 mail = Mail(app)
+
+# Instantiating LoginManager
+login_manager = LoginManager()
+
+#Initializing the login_manager extension with the application
+login_manager.init_app(app)
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 @app.route('/')
 def home():

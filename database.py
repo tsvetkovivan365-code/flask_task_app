@@ -1,10 +1,11 @@
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import UserMixin
 
 # Initializing SQLAlchemy object
 db = SQLAlchemy()
 
 # Defining the User model/table
-class User(db.Model):
+class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
@@ -19,7 +20,7 @@ class User(db.Model):
 
 
 # Defining the Task model/table
-class Task(db.Model):
+class Task(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     description = db.Column(db.String(500), nullable=True)
