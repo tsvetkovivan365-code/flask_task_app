@@ -44,6 +44,14 @@ def home():
 def dashboard():
     return render_template("dashboard.html")
 
+@app.route('/register')
+def register():
+    return render_template("register_user.html")
+
+@app.route('/login')
+def login():
+    return render_template("login_user.html")
+
 @app.route('/logout')
 def logout():
     return logout_user()
