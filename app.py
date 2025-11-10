@@ -44,7 +44,6 @@ def home():
     return render_template("home.html")
 
 @app.route('/dashboard')
-@login_required
 def dashboard():
     return render_template("dashboard.html")
 
@@ -70,7 +69,7 @@ def register():
  
     return render_template('register.html', form=register_form)
 
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     login_form = LoginForm()
     return render_template("login.html", form=login_form)
