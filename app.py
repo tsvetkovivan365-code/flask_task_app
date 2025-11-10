@@ -1,9 +1,12 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash, session
 from database import db, User, Task
 from dotenv import load_dotenv
 from os import path, environ
 from flask_mail import Mail
 from flask_login import LoginManager
+from flask_wtf import FlaskForm
+from wtforms import StringField, TextAreaField, DateTimeField, SubmitField
+from wtforms.validators import DataRequired
 
 
 # Flask App Initialization
@@ -45,13 +48,29 @@ def home():
 def dashboard():
     return render_template("dashboard.html")
 
-@app.route('/register')
+@app.route('/register', methods=["GET", "POST"])
 def register():
-    return render_template("register_user.html")
+    if request.method == "POST":
+        name = request.form.get("name")
+        email = request.form.get("email")
+        password = request.form.get("password")
+        if not name or not email or not password:
+            flash("All fields are required!", "error")
+            return redirect(url_for("register"))
+        existing_user = User.query.filter_by(email="email").first()
+        if existing_user:
+            flash("Email already exists!", 'error')
+            return redirect(url_for('register'))
+        new_user = User(name=name, email=email, password=password)
+        db.session.add(new_user)
+        db.session.commit()
+        flash("You have successfully registered!", 'success')
+        return redirect(url_for('dashboard.html'))
+    return render_template("register.html")
 
 @app.route('/login')
 def login():
-    return render_template("login_user.html")
+    return render_template("login.html")
 
 
 # Run application
