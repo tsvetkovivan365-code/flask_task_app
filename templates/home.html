@@ -1,6 +1,12 @@
 {% extends "navbar.html" %}
 {% block body %}
-<section class='bg-red-600 rounded-3xl inline-block mx-auto max-w-3xl text-4xl py-59 px-10'>
-    <p>Welcome to your daily Task Manager</p>
+<section class='mt-25 flex flex-col justify-center items-center'>
+    <section class='flex flex-col justify-center items-center mx-18 px-6 text-4xl '>
+        <p>Welcome to your daily</p>
+        <p>Task Manager :)</p>
+    </section>
+    <section class='max-w-3xl'>
+        <img src="{{url_for('static', filename='schedule.svg')}}" alt="Schedule image">
+    </section>
 </section>
-{% endblock body %}
+{% endblock %}

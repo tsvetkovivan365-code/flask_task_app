@@ -3,10 +3,9 @@ from database import db, User, Task
 from dotenv import load_dotenv
 from os import path, environ
 from flask_mail import Mail
-from flask_login import LoginManager
-from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField, DateTimeField, SubmitField
-from wtforms.validators import DataRequired
+from flask_login import LoginManager, login_required, logout_user
+from forms import LoginForm, RegistrationForm
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 # Flask App Initialization
@@ -45,32 +44,36 @@ def home():
     return render_template("home.html")
 
 @app.route('/dashboard')
+@login_required
 def dashboard():
     return render_template("dashboard.html")
 
-@app.route('/register', methods=["GET", "POST"])
+@app.route('/register' , methods = ['GET', 'POST'])
 def register():
-    if request.method == "POST":
-        name = request.form.get("name")
-        email = request.form.get("email")
-        password = request.form.get("password")
-        if not name or not email or not password:
-            flash("All fields are required!", "error")
-            return redirect(url_for("register"))
-        existing_user = User.query.filter_by(email="email").first()
-        if existing_user:
-            flash("Email already exists!", 'error')
-            return redirect(url_for('register'))
-        new_user = User(name=name, email=email, password=password)
+    register_form = RegistrationForm()
+ 
+    if register_form.validate_on_submit():
+        hashed_password = generate_password_hash(register_form.password.data, method = 'sha256')
+        username = register_form.username.data
+        email = register_form.email.data
+        password = hashed_password
+ 
+ 
+        new_user = User(name=username, email=email, password=password)
         db.session.add(new_user)
         db.session.commit()
-        flash("You have successfully registered!", 'success')
-        return redirect(url_for('dashboard.html'))
-    return render_template("register.html")
+ 
+        flash("Registration was successfull!", "success")
+ 
+        return redirect(url_for('login'))
+ 
+ 
+    return render_template('register.html', form=register_form)
 
 @app.route('/login')
 def login():
-    return render_template("login.html")
+    login_form = LoginForm()
+    return render_template("login.html", form=login_form)
 
 
 # Run application
