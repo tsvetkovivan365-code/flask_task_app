@@ -43,9 +43,9 @@ def load_user(user_id):
 def home():
     return render_template("home.html")
 
-@app.route('/dashboard')
+@app.route('/dashboard', methods = ['GET', 'POST'])
 def dashboard():
-    return render_template("dashboard.html")
+    return render_template("dashboard.html", tasks=Task.query.all())
 
 @app.route('/register' , methods = ['GET', 'POST'])
 def register():
@@ -72,7 +72,11 @@ def register():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     login_form = LoginForm()
+    if login_form.validate_on_submit():
+        return redirect(url_for('home'))
     return render_template("login.html", form=login_form)
+
+
 
 
 # Run application

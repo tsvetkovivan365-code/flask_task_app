@@ -1,6 +1,33 @@
 {% extends "navbar.html" %}
 {% block body %}
-<section>
-    <h2 class='text-center'>Dashboard</h2>
+<section class='flex flex-col items-center gap-y-3.5 mt-20'>
+    <h2 class='text-center text-4xl mb-15'>Tasks</h2>
+    <h3 class='text-center'>Create new task</h3>
+    <label for="new_task">Title:</label>
+    <input type="text" id='new_task'>
+    <button type='submit' class='w-3xs bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200 shadow-lg mt-6'>Create</button>
+    <section class='flex gap-7'>
+        <section>
+            {% for task in tasks%}
+                {% if task.status == 'To Do' %}
+                    <li>{{task.title}}</li>
+                {% endif %}
+            {% endfor %}
+        </section>
+        <section>
+            {% for task in tasks%}
+                {% if task.status == 'In Progress' %}
+                    <li>{{task.title}}</li>
+                {% endif %}
+            {% endfor %}
+        </section>
+        <section>
+            {% for task in tasks%}
+                {% if task.status == 'Completed' %}
+                    <li>{{task.title}}</li>
+                {% endif %}
+            {% endfor %}
+        </section>
+    </section>
 </section>
 {% endblock %}
