@@ -9,21 +9,21 @@
 <body class="bg-gray-300 min-h-screen font-sans">
     <nav class="shadow-xl dark:bg-orange-400">
         <ul class="flex justify-center gap-x-15.5 text-2xl items-center h-16">
-                <li class="border-b-2"><a href="{{ url_for('home') }}" class="text-gray-700 hover:shadow-xl rounded-md font-medium transition duration-200">
+                <li class="text-gray-700 dark:border-b-4 hover:shadow-xl rounded-md font-medium transition duration-200"><a href="{{ url_for('home') }}">
                     Home
                 </a></li>
-                <li><a href="{{ url_for('dashboard') }}" class="text-gray-700 border-b-2 hover:shadow-xl font-medium transition duration-200">
+                <li class="text-gray-700 dark:border-b-4 hover:shadow-xl rounded-md font-medium transition duration-200"><a href="{{ url_for('dashboard') }}">
                     Dashboard
                 </a></li>
                 {% if current_user.is_authenticated %}
                     <div class="flex items-center space-x-2" >
                          <span class="text-sm text-gray-500 hidden lg:inline">Hello, {{ current_user.username }}</span>
-                        <li><a href="{{ url_for('logout') }}" class="text-gray-700 border-b-2 hover:shadow-xl font-medium transition duration-200">
+                        <li class="text-gray-700 dark:border-b-4 hover:shadow-xl rounded-md font-medium transition duration-200"><a href="{{ url_for('logout') }}">
                             Logout
                         </a></li>
                     </div>
                 {% else %}
-                    <li><a href="{{ url_for('login') }}" class="text-gray-700 border-b-2 hover:shadow-xl text-md font-medium transition duration-200">
+                    <li class="text-gray-700 dark:border-b-4 hover:shadow-xl rounded-md font-medium transition duration-200"><a href="{{ url_for('login') }}">
                         Login / Register
                     </a></li>
                 {% endif %}
