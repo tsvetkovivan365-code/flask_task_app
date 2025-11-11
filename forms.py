@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField, DateTimeField, SubmitField, EmailField, PasswordField
+from wtforms import StringField, RadioField ,TextAreaField, DateField, SubmitField, EmailField, PasswordField
 from wtforms.validators import InputRequired, Length
 
 class LoginForm(FlaskForm):
@@ -11,3 +11,8 @@ class RegistrationForm(FlaskForm):
     email = EmailField('Email', validators=[InputRequired()], render_kw={"placeholder": "Enter Email"})
     password = PasswordField('Password', validators=[InputRequired(), Length(min=8) ], render_kw={"placeholder": "Enter Password"})
     
+class CreateTaskForm(FlaskForm):
+    title = StringField('Title', validators=[InputRequired(), Length(max=100)])
+    description = StringField('Description', validators=[Length(max=100)])
+    due_date = DateField('Due Date', validators=[InputRequired()])
+    status = RadioField('Status', choices=["To Do", "In Progress", "Completed"])

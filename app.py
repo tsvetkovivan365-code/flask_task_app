@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from os import path, environ
 from flask_mail import Mail
 from flask_login import LoginManager, login_required, logout_user
-from forms import LoginForm, RegistrationForm
+from forms import LoginForm, RegistrationForm, CreateTaskForm
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
@@ -45,7 +45,8 @@ def home():
 
 @app.route('/dashboard', methods = ['GET', 'POST'])
 def dashboard():
-    return render_template("dashboard.html", tasks=Task.query.all())
+    create_task_form = CreateTaskForm()
+    return render_template("dashboard.html", form=create_task_form)
 
 @app.route('/register' , methods = ['GET', 'POST'])
 def register():

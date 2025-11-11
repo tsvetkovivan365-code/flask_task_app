@@ -3,9 +3,19 @@
 <section class='flex flex-col items-center gap-y-3.5 mt-20'>
     <h2 class='text-center text-4xl mb-15'>Tasks</h2>
     <h3 class='text-center'>Create new task</h3>
-    <label for="new_task">Title:</label>
-    <input type="text" id='new_task'>
-    <button type='submit' class='w-3xs bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200 shadow-lg mt-6'>Create</button>
+    <form method='post'>
+        {{ form.csrf_token }}
+        {{ form.title.label(class="block text-sm font-medium text-gray-700 mb-1") }}
+        {{ form.title(class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-6") }}
+        {{ form.description.label(class="block text-sm font-medium text-gray-700 mb-1") }}
+        {{ form.description(class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-6") }}
+        {{ form.due_date.label(class="block text-sm font-medium text-gray-700 mb-1") }}
+        {{ form.due_date(class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-6") }}
+        {{ form.status.label(class="block text-sm font-medium text-gray-700 mb-1") }}
+        {{ form.status(class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-6") }}
+
+        <button type='submit' class='w-3xs bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200 shadow-lg mt-6'>Create</button>
+    </form>
     <section class='flex gap-7'>
         <section>
             {% for task in tasks%}
