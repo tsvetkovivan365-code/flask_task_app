@@ -16,22 +16,25 @@
 
         <button type='submit' class='w-3xs bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200 shadow-lg mt-6'>Create</button>
     </form>
-    <section class='flex gap-7'>
-        <section>
+    <section class='flex gap-60 mt-10'>
+        <section class='border-green-500 border-8 w-2xs h-auto'>
+            <h3 class='text-center'>To Do</h3>
             {% for task in tasks%}
                 {% if task.status == 'To Do' %}
                     <li>{{task.title}}</li>
                 {% endif %}
             {% endfor %}
         </section>
-        <section>
+        <section class='border-green-500 border-8 w-2xs h-auto'>
+            <h3 class='text-center'>In Progress</h3>
             {% for task in tasks%}
                 {% if task.status == 'In Progress' %}
                     <li>{{task.title}}</li>
                 {% endif %}
             {% endfor %}
         </section>
-        <section>
+        <section class='border-green-500 border-8 w-2xs h-auto'>
+            <h3 class='text-center'>Completed</h3>
             {% for task in tasks%}
                 {% if task.status == 'Completed' %}
                     <li>{{task.title}}</li>

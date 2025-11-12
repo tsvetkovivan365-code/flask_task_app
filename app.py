@@ -1,9 +1,9 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, redirect, url_for, flash
 from database import db, User, Task
 from dotenv import load_dotenv
 from os import path, environ
 from flask_mail import Mail
-from flask_login import LoginManager, login_required, logout_user
+from flask_login import LoginManager, login_required, logout_user, current_user, login_user
 from forms import LoginForm, RegistrationForm, CreateTaskForm
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -37,16 +37,31 @@ login_manager.init_app(app)
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
+    return User.query.get(int(id))
 
 @app.route('/')
 def home():
     return render_template("home.html")
 
 @app.route('/dashboard', methods = ['GET', 'POST'])
+@login_required
 def dashboard():
     create_task_form = CreateTaskForm()
-    return render_template("dashboard.html", form=create_task_form)
+
+    if create_task_form.validate_on_submit():
+        title = create_task_form.title.data
+        description = create_task_form.description.data
+        due_date = create_task_form.due_date.data
+        status = create_task_form.status.data
+        user_id = current_user.id
+ 
+        new_task = Task(title=title, description=description, due_date=due_date, status=status, user_id=user_id)
+        db.session.add(new_task)
+        db.session.commit()
+ 
+ 
+    tasks = Task.query.all()
+    return render_template("dashboard.html", form=create_task_form, tasks=tasks)
 
 @app.route('/register' , methods = ['GET', 'POST'])
 def register():
@@ -59,11 +74,10 @@ def register():
         password = hashed_password
  
  
-        new_user = User(name=username, email=email, password=password)
+        new_user = User(name=username, username=username, email=email, password=password)
         db.session.add(new_user)
         db.session.commit()
  
-        flash("Registration was successfull!", "success")
  
         return redirect(url_for('login'))
  
@@ -74,7 +88,18 @@ def register():
 def login():
     login_form = LoginForm()
     if login_form.validate_on_submit():
-        return redirect(url_for('home'))
+        username = login_form.username.data
+        password = login_form.password.data 
+
+        user = User.query.filter_by(username=username).first()
+        if user and check_password_hash(user.password, password):
+            login_user(user)
+            flash("Login successful!", 'success')
+            return redirect(url_for('dashboard'))
+        else:
+            flash("Invalid username or password", "error")
+        
+
     return render_template("login.html", form=login_form)
 
 
@@ -83,3 +108,4 @@ def login():
 # Run application
 if __name__ == '__main__':
     app.run(debug=True)
+
