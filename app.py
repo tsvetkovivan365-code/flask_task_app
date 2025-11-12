@@ -28,16 +28,15 @@ db.init_app(app)
 # Instantiating Mail from flask_email
 mail = Mail(app)
 
-# Instantiating LoginManager
+# Initializing LoginManager
 login_manager = LoginManager()
-
-#Initializing the login_manager extension with the application
 login_manager.init_app(app)
+login_manager.login_view = 'login'
 
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(int(id))
+    return User.query.get(int(user_id))
 
 @app.route('/')
 def home():
@@ -71,10 +70,11 @@ def register():
         hashed_password = generate_password_hash(register_form.password.data, method = 'sha256')
         username = register_form.username.data
         email = register_form.email.data
-        password = hashed_password
+
+        if User.query.filter_by(username=username).first():
+            return render_template('register.html', error='Username already exists')
  
- 
-        new_user = User(name=username, username=username, email=email, password=password)
+        new_user = User(name=username, username=username, email=email, password=hashed_password)
         db.session.add(new_user)
         db.session.commit()
  
