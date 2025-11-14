@@ -1,10 +1,10 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, RadioField, DateField, EmailField, PasswordField
-from wtforms.validators import DataRequired, Length
+from wtforms.validators import DataRequired, Length, InputRequired
 
 class LoginForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()], render_kw={"placeholder": "Enter Username"})
-    password = PasswordField('Password', validators=[DataRequired(), Length(min=8)], render_kw={"placeholder": "Enter Password"})
+    username = StringField('Username', validators=[InputRequired()], render_kw={"placeholder": "Enter Username"})
+    password = PasswordField('Password', validators=[InputRequired(), Length(min=8)], render_kw={"placeholder": "Enter Password"})
 
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()], render_kw={"placeholder": "Enter Username"})

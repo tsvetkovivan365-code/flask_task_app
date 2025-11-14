@@ -95,7 +95,7 @@ def login():
 
         user = User.query.filter_by(username=username).first()
         if user and check_password_hash(user.password, password=password):
-            login_user(user=user)
+            login_user(user)
             flash("Login successful!", 'success')
             return redirect(url_for('dashboard'))
         else:
@@ -106,7 +106,12 @@ def login():
     return render_template("login.html", form=login_form)
 
 
-
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash("You have been logged out successfully!", 'success')
+    return redirect(url_for('home'))
 
 # Run application
 if __name__ == '__main__':
