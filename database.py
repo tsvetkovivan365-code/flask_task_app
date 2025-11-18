@@ -25,7 +25,7 @@ class Task(db.Model, UserMixin):
     title = db.Column(db.String(100), nullable=False)
     description = db.Column(db.String(500), nullable=True)
     status = db.Column(db.String(12), default="To Do", nullable=False)
-    due_date = db.Column(db.DateTime(), nullable=False)
+    due_date = db.Column(db.Date(), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     def __repr__(self):

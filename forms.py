@@ -15,5 +15,5 @@ class RegistrationForm(FlaskForm):
 class CreateTaskForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired(), Length(max=100)])
     description = StringField('Description', validators=[Length(max=100)])
-    due_date = DateField('Due Date', validators=[DataRequired()], format='%d-%m-%Y')
+    due_date = DateField('Due Date', validators=[DataRequired()])
     status = RadioField('Status', choices=["To Do", "In Progress", "Completed"])

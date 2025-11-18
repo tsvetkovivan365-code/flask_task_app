@@ -3,7 +3,7 @@
 <section class='px-3'>
     <section class='bg-white p-8 rounded-xl shadow-2xl mx-auto max-w-lg my-25'>
         <h2 class='text-center text-4xl mb-10'>Create new task</h2>
-        <form method='post' action="{{ url_for('dashboard') }}" name='create_task' class='flex flex-col items-center'>
+        <form method='post' class='flex flex-col items-center'>
             <section class='grid grid-cols-2 gap-x-13.5'>
                 {{ form.csrf_token }}
                 <section>
@@ -25,8 +25,8 @@
 
     
     <h3 class='text-center text-4xl mb-15'>Tasks</h3>
-    
-    <section class='grid grid-cols-6 gap-2 md:gap-15 mt-10 pb-10 '>
+
+    <section class='grid grid-cols-5 gap-2 md:gap-15 mt-10 pb-10 '>
             {% for task in tasks %}
                 {% if task.status == 'To Do' %}
                     <section class='dark:bg-yellow-600 p-3 flex-1 rounded-xl min-w-1 shadow-2xl'>
@@ -70,7 +70,6 @@
                     </section>
                 {% endif %}
             {% endfor %}
-
-    </section> 
+    </section>
 </section>
 {% endblock %}
