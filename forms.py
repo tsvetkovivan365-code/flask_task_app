@@ -14,7 +14,6 @@ class RegistrationForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired(), Length(min=8)], render_kw={"placeholder": "Enter Password"})
 
     def validate_username(self, username):
-        # Check if username already exists
         user = db.session.execute(db.select(User).filter_by(username=username.data))
         if user:
             raise ValidationError('That username is taken. Please choose a different one.')
@@ -24,3 +23,4 @@ class CreateTaskForm(FlaskForm):
     description = StringField('Description', validators=[Length(max=100)])
     due_date = DateField('Due Date', validators=[DataRequired()])
     status = RadioField('Status', choices=["To Do", "In Progress", "Completed"])
+    priority = RadioField('Priority', choices=["Low", "Medium", "High", "Critical"])

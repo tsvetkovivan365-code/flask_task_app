@@ -60,9 +60,10 @@ def create_task():
         description = create_task_form.description.data
         due_date = create_task_form.due_date.data
         status = create_task_form.status.data
+        priority = create_task_form.priority
         user_id = current_user.id
  
-        new_task = Task(title=title, description=description, due_date=due_date, status=status, user_id=user_id)
+        new_task = Task(title=title, description=description, due_date=due_date, status=status, user_id=user_id, priority=priority)
         db.session.add(new_task)
         db.session.commit()
  
