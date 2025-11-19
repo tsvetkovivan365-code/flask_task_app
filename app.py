@@ -46,6 +46,13 @@ def home():
 @app.route('/dashboard', methods = ['GET', 'POST'])
 @login_required
 def dashboard():
+ 
+    tasks = Task.query.all()
+    return render_template("dashboard.html", tasks=tasks)
+
+@app.route('/create_task', methods = ['GET', 'POST'])
+@login_required
+def create_task():
     create_task_form = CreateTaskForm()
 
     if create_task_form.validate_on_submit():
@@ -60,8 +67,8 @@ def dashboard():
         db.session.commit()
  
  
-    tasks = Task.query.all()
-    return render_template("dashboard.html", form=create_task_form, tasks=tasks)
+    
+    return render_template("create_task.html", form=create_task_form)
 
 @app.route('/register' , methods = ['GET', 'POST'])
 def register():
