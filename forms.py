@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
+from database import db, User
 from datetime import datetime
-from wtforms import StringField, RadioField, DateField, EmailField, PasswordField
+from wtforms import StringField, RadioField, DateField, EmailField, PasswordField, ValidationError
 from wtforms.validators import DataRequired, Length, InputRequired
 
 class LoginForm(FlaskForm):
@@ -11,6 +12,12 @@ class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()], render_kw={"placeholder": "Enter Username"})
     email = EmailField('Email', validators=[DataRequired()], render_kw={"placeholder": "Enter Email"})
     password = PasswordField('Password', validators=[DataRequired(), Length(min=8)], render_kw={"placeholder": "Enter Password"})
+
+    def validate_username(self, username):
+        # Check if username already exists
+        user = db.session.execute(db.select(User).filter_by(username=username.data))
+        if user:
+            raise ValidationError('That username is taken. Please choose a different one.')
     
 class CreateTaskForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired(), Length(max=100)])
