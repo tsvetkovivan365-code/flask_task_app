@@ -1,7 +1,7 @@
 {% extends "navbar.html" %}
 {% block body %}
 <section class='px-3'>
-    <section class='bg-white p-8 rounded-xl shadow-2xl mx-auto max-w-lg my-25'>
+    <section class='bg-white hidden p-8 rounded-xl shadow-2xl mx-auto max-w-lg my-25'>
         <h2 class='text-center text-4xl mb-10'>Create new task</h2>
         <form method='post' class='flex flex-col items-center'>
             <section class='grid grid-cols-2 gap-x-13.5'>
@@ -23,10 +23,25 @@
         </form>
     </section>
 
+    <section class='flex gap-5 items-center justify-center top-29 w-full relative'>
+        <h3 class='text-center text-4xl'>Tasks</h3>
+        <button class='transition-all text-center rounded-full w-12 h-12 text-3xl text-white bg-blue-600 hover:bg-blue-400 hover:scale-140 hover:text-4xl'>+</button>
+    </section>
     
-    <h3 class='text-center text-4xl mb-15'>Tasks</h3>
 
-    <section class='grid grid-cols-5 gap-2 md:gap-15 mt-10 pb-10 '>
+    <section class='relative flex gap-5 items-center justify-start top-58 w-full'>
+        <label for="filter" class='text-[20px]'>Status:</label>
+        <select name="filter" placeholder='Choose status'>
+            <option value="" disabled selected>Select an option</option>
+            <option value="To Do">To Do</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Completed">Completed</option>
+        </select>
+    </section>   
+
+    <section class='grid grid-cols-5 gap-2 md:gap-15 mt-10 pb-10 relative top-60 z-0'>
+
+
             {% for task in tasks %}
                 {% if task.status == 'To Do' %}
                     <section class='dark:bg-yellow-600 p-3 flex-1 rounded-xl min-w-1 shadow-2xl'>
@@ -71,5 +86,5 @@
                 {% endif %}
             {% endfor %}
     </section>
-</section>
+    
 {% endblock %}
