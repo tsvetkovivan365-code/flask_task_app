@@ -13,10 +13,7 @@ class RegistrationForm(FlaskForm):
     email = EmailField('Email', validators=[DataRequired()], render_kw={"placeholder": "Enter Email"})
     password = PasswordField('Password', validators=[DataRequired(), Length(min=8)], render_kw={"placeholder": "Enter Password"})
 
-    def validate_username(self, username):
-        user = db.session.execute(db.select(User).filter_by(username=username.data))
-        if user:
-            raise ValidationError('That username is taken. Please choose a different one.')
+
     
 class CreateTaskForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired(), Length(max=100)])

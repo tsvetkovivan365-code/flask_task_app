@@ -56,6 +56,7 @@ def create_task():
     create_task_form = CreateTaskForm()
 
     if create_task_form.validate_on_submit():
+        create_task_form.v
         title = create_task_form.title.data
         description = create_task_form.description.data
         due_date = create_task_form.due_date.data

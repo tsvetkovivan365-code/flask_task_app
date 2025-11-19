@@ -3,7 +3,7 @@
 <section class='px-3 absolute top-29 w-full'>
     <section class='bg-white p-8 rounded-xl shadow-2xl mx-auto max-w-lg my-25'>
         <h2 class='text-center text-4xl mb-10'>Create new task</h2>
-        <form method='post' class='flex flex-col items-center' action="{{url_for('dashboard')}}">
+        <form method='POST' class='flex flex-col items-center' action="{{url_for('dashboard')}}">
             <section class='grid grid-cols-2 gap-x-13.5'>
                 {{ form.csrf_token }}
                 <section>
