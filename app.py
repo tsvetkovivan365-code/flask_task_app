@@ -43,7 +43,7 @@ def load_user(user_id):
 def home():
     return render_template("home.html")
 
-@app.route('/dashboard', methods = ['GET', 'POST'])
+@app.route('/dashboard', methods = ['GET'])
 @login_required
 def dashboard():
  
@@ -56,7 +56,6 @@ def create_task():
     create_task_form = CreateTaskForm()
 
     if create_task_form.validate_on_submit():
-        create_task_form.v
         title = create_task_form.title.data
         description = create_task_form.description.data
         due_date = create_task_form.due_date.data
@@ -67,8 +66,7 @@ def create_task():
         new_task = Task(title=title, description=description, due_date=due_date, status=status, user_id=user_id, priority=priority)
         db.session.add(new_task)
         db.session.commit()
- 
- 
+
     
     return render_template("create_task.html", form=create_task_form)
 
