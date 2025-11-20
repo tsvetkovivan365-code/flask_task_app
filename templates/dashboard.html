@@ -1,28 +1,31 @@
 {% extends "navbar.html" %}
 {% block body %}
-<section class='px-3'>
 
+<section class='px-3'>
+ 
     <section class='flex gap-5 items-center justify-center top-29 w-full relative'>
         <h3 class='text-center text-4xl'>Tasks</h3>
         <form action="{{url_for('create_task')}}">
             <button type='submit' class='transition-all text-center rounded-full w-12 h-12 text-3xl text-white bg-blue-600 hover:bg-blue-400 hover:scale-140 hover:text-4xl'>+</button>
         </form>
     </section>
-    
-
+   
+ 
     <section class='relative flex gap-5 items-center justify-start top-58 w-full'>
-        <label for="filter" class='text-[20px]'>Status:</label>
-        <select name="filter" placeholder='Choose status'>
-            <option value="" disabled selected>Select an option</option>
-            <option value="To Do">To Do</option>
-            <option value="In Progress">In Progress</option>
-            <option value="Completed">Completed</option>
-        </select>
-    </section>   
-
+        <form method="GET" action="{{url_for('dashboard')}}" class='flex gap-5 items-center'>
+            <label for="filter" class='text-[20px]'>Status:</label>
+            <select name="filter" id="filter" onchange="this.form.submit()" class='p-2 border border-gray-300 rounded-lg'>
+                <option value="">Select option</option>
+                <option value="To Do" {% if selected_status == 'To Do' %}selected{% endif %}>To Do</option>
+                <option value="In Progress" {% if selected_status == 'In Progress' %}selected{% endif %}>In Progress</option>
+                <option value="Completed" {% if selected_status == 'Completed' %}selected{% endif %}>Completed</option>
+            </select>
+        </form>
+    </section>  
+ 
     <section class='grid grid-cols-5 gap-2 md:gap-15 mt-10 pb-10 relative top-60 z-0'>
-
-
+ 
+ 
             {% for task in tasks %}
                 {% if task.status == 'To Do' %}
                     <section class='dark:bg-yellow-600 p-3 flex-1 rounded-xl min-w-1 shadow-2xl'>
@@ -38,7 +41,7 @@
                         </ul>
                     </section>
                 {% endif %}
-
+ 
                 {% if task.status == 'In Progress' %}
                     <section class='dark:bg-blue-300 p-3 flex-1 rounded-xl min-w-1 shadow-2xl'>
                         <ul class='list-none'>
@@ -52,7 +55,7 @@
                         </ul>
                     </section>
                 {% endif %}
-
+ 
                 {% if task.status == 'Completed' %}
                     <section class='dark:bg-green-300 p-3 flex-1 rounded-xl min-w-1 shadow-2xl'>
                         <ul class='list-none'>
@@ -68,5 +71,5 @@
                 {% endif %}
             {% endfor %}
     </section>
-    
+   
 {% endblock %}

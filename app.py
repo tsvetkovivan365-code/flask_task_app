@@ -67,6 +67,8 @@ def create_task():
         db.session.add(new_task)
         db.session.commit()
 
+        return redirect(url_for('dashboard'))
+
     
     return render_template("create_task.html", form=create_task_form)
 
@@ -80,7 +82,7 @@ def register():
         email = register_form.email.data
 
         if User.query.filter_by(username=username).first():
-            return render_template('register.html', error='Username already exists')
+            return render_template('register.html', form=register_form, error='Username already exists')
  
         new_user = User(username=username, email=email, password=hashed_password)
         db.session.add(new_user)
@@ -101,13 +103,13 @@ def login():
         password = login_form.password.data 
 
         user = User.query.filter_by(username=username).first()
-        if user and check_password_hash(user.password, password=password):
+        if user and check_password_hash(user.password, password):
             login_user(user)
             flash("Login successful!", 'success')
             return redirect(url_for('dashboard'))
         else:
             flash("Invalid username or password", "error")
-            return render_template('login.html', error="Invalid username or password")
+            return render_template('login.html', form=login_form, error="Invalid username or password")
         
 
     return render_template("login.html", form=login_form)
