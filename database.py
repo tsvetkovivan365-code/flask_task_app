@@ -26,7 +26,7 @@ class Task(db.Model, UserMixin):
     description = db.Column(db.String(500), nullable=True)
     status = db.Column(db.String(12), default="To Do", nullable=False)
     due_date = db.Column(db.Date(), nullable=False)
-    priority = db.Column(db.String, default="Low", nullable=False)
+    priority = db.Column(db.String(8), default="Low", nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     def __repr__(self):
