@@ -48,9 +48,14 @@ def home():
 def dashboard():
  
     selected_status = request.args.get('selected_status')
+    selected_priority = request.args.get('selected_priority')
  
-    if selected_status:
+    if selected_status and selected_priority:
+        tasks = Task.query.filter_by(user_id=current_user.id, status=selected_status, priority=selected_priority).all()
+    elif selected_status:
         tasks = Task.query.filter_by(user_id=current_user.id, status=selected_status).all()
+    elif selected_priority:
+        tasks = Task.query.filter_by(user_id=current_user.id, priority=selected_priority).all()
     else:
         tasks = Task.query.filter_by(user_id=current_user.id).all()
 
@@ -119,6 +124,17 @@ def login():
         
 
     return render_template("login.html", form=login_form)
+
+# DELETE task
+@app.route('/api/tasks/delete', methods=['DELETE'])
+@login_required
+def api_delete_task(task_id):
+    task = Task.query.filter_by(id=task_id, user_id=current_user.id).first()
+ 
+    db.session.delete(task)
+    db.session.commit()
+ 
+    return render_template("dashboard.html") 
 
 
 @app.route('/logout')
