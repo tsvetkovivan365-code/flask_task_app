@@ -47,7 +47,13 @@ def home():
 @login_required
 def dashboard():
  
-    tasks = Task.query.all()
+    selected_status = request.args.get('selected_status')
+ 
+    if selected_status:
+        tasks = Task.query.filter_by(user_id=current_user.id, status=selected_status).all()
+    else:
+        tasks = Task.query.filter_by(user_id=current_user.id).all()
+
     return render_template("dashboard.html", tasks=tasks)
 
 @app.route('/create_task', methods = ['GET', 'POST'])
