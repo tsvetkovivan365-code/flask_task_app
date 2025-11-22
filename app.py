@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, flash, request
+from flask import Flask, render_template, redirect, url_for, flash, request, Response
 from database import db, User, Task
 from dotenv import load_dotenv
 from os import path, environ
@@ -6,7 +6,8 @@ from flask_mail import Mail
 from flask_login import LoginManager, login_required, logout_user, current_user, login_user
 from forms import LoginForm, RegistrationForm, CreateTaskForm
 from werkzeug.security import generate_password_hash, check_password_hash
-import sys
+import csv
+import io
 
 
 # Flask App Initialization
@@ -135,6 +136,27 @@ def api_delete_task(task_id):
     db.session.commit()
  
     return render_template("dashboard.html") 
+
+# Export user's tasks in csv format
+@app.route('/download_csv')
+@login_required
+def download_csv():
+
+    s = io.StringIO()
+    cw = csv.writer(s)
+
+    cw.writerow(['ID', 'Title', 'Description', 'Status', 'Due Date', 'Priority'])
+    
+    tasks = Task.query.filter_by(user_id=current_user.id)
+
+    for task in tasks:
+        cw.writerow([task.id, task.title, task.description, task.status, task.due_date, task.priority])
+
+    csv_data = Response(str.getvalue(), mimetype=('text/csv'))
+    csv_data.headers["Content-Disposition"] = "attachment; filename=tasks.csv"
+
+    return csv_data
+    
 
 
 @app.route('/logout')

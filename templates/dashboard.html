@@ -3,12 +3,24 @@
 
 <section class='px-3'>
  
-    <section class='flex gap-5 items-center justify-center top-29 w-full relative'>
-        <h3 class='text-center text-4xl'>Tasks</h3>
-        <form action="{{url_for('create_task')}}">
-            <button type='submit' class='transition-all text-center rounded-full w-12 h-12 text-3xl text-white bg-blue-600 hover:bg-blue-400 hover:scale-140 hover:text-4xl'>+</button>
-        </form>
+    <section class='flex top-29 justify-around relative max-sm:items-center w-full max-sm:flex-col'>
+
+        <section class='flex gap-5'>
+            <h3 class='text-center text-4xl'>Tasks</h3>
+
+            <form action="{{url_for('create_task')}}">
+                <button type='submit' class='transition-all text-center rounded-full w-12 h-12 text-3xl text-white bg-blue-600 hover:bg-blue-400 hover:scale-140 hover:text-4xl'>+</button>
+            </form>
+        </section>
+
+    
+        <section>
+            <a href="/download_csv">
+                <button class='transition-all rounded-2xl px-10 py-4 text-white bg-blue-600 hover:bg-blue-400 hover:scale-110'>Export tasks</button>
+            </a>
+        </section>
     </section>
+    
    
  
     <section class='relative flex gap-10 items-center justify-start top-58 w-full'>
