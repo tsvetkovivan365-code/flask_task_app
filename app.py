@@ -8,7 +8,10 @@ from forms import LoginForm, RegistrationForm, CreateTaskForm
 from werkzeug.security import generate_password_hash, check_password_hash
 import csv
 import io
-
+import smtplib
+import datetime
+from dateutil import parser
+from apscheduler.schedulers.background import BackgroundScheduler
 
 # Flask App Initialization
 app = Flask(__name__)
@@ -27,8 +30,8 @@ app.config['SECRET_KEY'] = environ.get('SECRET_KEY')
 #Initializing the database extension with the application
 db.init_app(app)
 
-# Instantiating Mail from flask_email
-mail = Mail(app)
+# Initializing BackgroundScheduler
+sched = BackgroundScheduler(daemon=True)
 
 # Initializing LoginManager
 login_manager = LoginManager()
@@ -156,8 +159,38 @@ def download_csv():
     csv_data.headers["Content-Disposition"] = "attachment; filename=tasks.csv"
 
     return csv_data
-    
 
+# Change to Scheduler
+def send_email(subject, body, to):
+    with smtplib.SMTP(environ.get('MAIL_SERVER'), environ.get('MAIL_PORT')) as server:
+        server.starttls()
+        server.login(environ.get('MAIL_USERNAME'), environ.GET('MAIL_PASSWORD'))
+        message = f"Subject:{subject}\n\n{body}"
+        server.sendmail(environ.get('MAIL_USERNAME'), to, message)
+
+def check_and_send_email():
+    with app.app_context():
+        tasks = Task.query.filter_by(user_id=current_user.id)
+
+        for task in tasks:
+            task_due_date = task.due_date
+            curr_time = parser.parse(datetime.datetime.date(), dayfirst=True).date()
+
+            delta = task_due_date - curr_time
+
+            if delta.days == 3:
+                send_email("3 days left", f"You have 3 days left to complete {task.title} on {task.due_date}.", current_user.email)
+
+            if delta.days == 1:
+                send_email("1 days left", f"You have 1 days left to complete {task.title} on {task.due_date}.", current_user.email)
+
+            if delta.days == 0:
+                send_email("0 days left", f"Deadline for task {task.title} is today!", current_user.email)
+        
+        return "Check completed."
+
+sched.add_job(check_and_send_email, 'interval', minutes=1)
+sched.start()
 
 @app.route('/logout')
 @login_required
