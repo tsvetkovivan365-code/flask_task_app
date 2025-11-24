@@ -994,6 +994,31 @@
       align-items: center;
     }
   }
+  .max-sm\:gap-1 {
+    @media (width < 40rem) {
+      gap: calc(var(--spacing) * 1);
+    }
+  }
+  .max-sm\:gap-2 {
+    @media (width < 40rem) {
+      gap: calc(var(--spacing) * 2);
+    }
+  }
+  .max-sm\:text-\[2px\] {
+    @media (width < 40rem) {
+      font-size: 2px;
+    }
+  }
+  .max-sm\:text-\[12px\] {
+    @media (width < 40rem) {
+      font-size: 12px;
+    }
+  }
+  .max-sm\:text-\[18px\] {
+    @media (width < 40rem) {
+      font-size: 18px;
+    }
+  }
   .sm\:h-8 {
     @media (width >= 40rem) {
       height: calc(var(--spacing) * 8);
