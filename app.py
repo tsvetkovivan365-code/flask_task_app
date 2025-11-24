@@ -27,7 +27,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = environ.get('SECRET_KEY')
 
 
-#Initializing the database extension with the application
+# Initializing the database extension with the application
 db.init_app(app)
 
 # Initializing BackgroundScheduler
@@ -43,29 +43,35 @@ login_manager.login_view = 'login'
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+
 @app.route('/')
 def home():
     return render_template("home.html")
 
-@app.route('/dashboard', methods = ['GET'])
+
+@app.route('/dashboard', methods=['GET'])
 @login_required
 def dashboard():
- 
+
     selected_status = request.args.get('selected_status')
     selected_priority = request.args.get('selected_priority')
- 
+
     if selected_status and selected_priority:
-        tasks = Task.query.filter_by(user_id=current_user.id, status=selected_status, priority=selected_priority).all()
+        tasks = Task.query.filter_by(
+            user_id=current_user.id, status=selected_status, priority=selected_priority).all()
     elif selected_status:
-        tasks = Task.query.filter_by(user_id=current_user.id, status=selected_status).all()
+        tasks = Task.query.filter_by(
+            user_id=current_user.id, status=selected_status).all()
     elif selected_priority:
-        tasks = Task.query.filter_by(user_id=current_user.id, priority=selected_priority).all()
+        tasks = Task.query.filter_by(
+            user_id=current_user.id, priority=selected_priority).all()
     else:
         tasks = Task.query.filter_by(user_id=current_user.id).all()
 
     return render_template("dashboard.html", tasks=tasks)
 
-@app.route('/create_task', methods = ['GET', 'POST'])
+
+@app.route('/create_task', methods=['GET', 'POST'])
 @login_required
 def create_task():
     create_task_form = CreateTaskForm()
@@ -77,20 +83,21 @@ def create_task():
         status = create_task_form.status.data
         priority = create_task_form.priority.data
         user_id = current_user.id
- 
-        new_task = Task(title=title, description=description, due_date=due_date, status=status, user_id=user_id, priority=priority)
+
+        new_task = Task(title=title, description=description, due_date=due_date,
+                        status=status, user_id=user_id, priority=priority)
         db.session.add(new_task)
         db.session.commit()
 
         return redirect(url_for('dashboard'))
 
-    
     return render_template("create_task.html", form=create_task_form)
 
-@app.route('/register' , methods = ['GET', 'POST'])
+
+@app.route('/register', methods=['GET', 'POST'])
 def register():
     register_form = RegistrationForm()
- 
+
     if register_form.validate_on_submit():
         hashed_password = generate_password_hash(register_form.password.data)
         username = register_form.username.data
@@ -98,24 +105,23 @@ def register():
 
         if User.query.filter_by(username=username).first():
             return render_template('register.html', form=register_form, error='Username already exists')
- 
+
         new_user = User(username=username, email=email, password=hashed_password)
         db.session.add(new_user)
         db.session.commit()
- 
- 
+
         return redirect(url_for('login'))
- 
- 
+
     return render_template('register.html', form=register_form)
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     login_form = LoginForm()
-    
+
     if login_form.validate_on_submit():
         username = login_form.username.data
-        password = login_form.password.data 
+        password = login_form.password.data
 
         user = User.query.filter_by(username=username).first()
         if user and check_password_hash(user.password, password):
@@ -125,7 +131,6 @@ def login():
         else:
             flash("Invalid username or password", "error")
             return render_template('login.html', form=login_form, error="Invalid username or password")
-        
 
     return render_template("login.html", form=login_form)
 
@@ -134,13 +139,15 @@ def login():
 @login_required
 def api_delete_task(task_id):
     task = Task.query.filter_by(id=task_id, user_id=current_user.id).first()
- 
+
     db.session.delete(task)
     db.session.commit()
- 
-    return render_template("dashboard.html") 
+
+    return render_template("dashboard.html")
 
 # Export user's tasks in csv format
+
+
 @app.route('/download_csv')
 @login_required
 def download_csv():
@@ -149,48 +156,54 @@ def download_csv():
     cw = csv.writer(s)
 
     cw.writerow(['ID', 'Title', 'Description', 'Status', 'Due Date', 'Priority'])
-    
+
     tasks = Task.query.filter_by(user_id=current_user.id)
 
     for task in tasks:
-        cw.writerow([task.id, task.title, task.description, task.status, task.due_date, task.priority])
+        cw.writerow([task.id, task.title, task.description,
+                    task.status, task.due_date, task.priority])
 
-    csv_data = Response(str.getvalue(), mimetype=('text/csv'))
+    csv_data = Response(s.getvalue(), mimetype=('text/csv'))
     csv_data.headers["Content-Disposition"] = "attachment; filename=tasks.csv"
 
     return csv_data
 
-# Change to Scheduler
+
 def send_email(subject, body, to):
     with smtplib.SMTP(environ.get('MAIL_SERVER'), environ.get('MAIL_PORT')) as server:
         server.starttls()
-        server.login(environ.get('MAIL_USERNAME'), environ.GET('MAIL_PASSWORD'))
+        server.login(environ.get('MAIL_USERNAME'), environ.get('MAIL_PASSWORD'))
         message = f"Subject:{subject}\n\n{body}"
         server.sendmail(environ.get('MAIL_USERNAME'), to, message)
 
+
 def check_and_send_email():
-    with app.app_context():
-        tasks = Task.query.filter_by(user_id=current_user.id)
+    tasks = db.session.query(Task).all()
 
-        for task in tasks:
-            task_due_date = task.due_date
-            curr_time = parser.parse(datetime.datetime.date(), dayfirst=True).date()
+    for task in tasks:
+        task_due_date = task.due_date
+        curr_time = datetime.date.today()
 
-            delta = task_due_date - curr_time
+        delta = task_due_date - curr_time
+        user_email = task.user.email
+        if delta.days == 3:
+            send_email(
+                "3 days left", f"You have 3 days left to complete {task.title} on {task.due_date}.", user_email)
 
-            if delta.days == 3:
-                send_email("3 days left", f"You have 3 days left to complete {task.title} on {task.due_date}.", current_user.email)
+        if delta.days == 1:
+            send_email(
+                "1 days left", f"You have 1 days left to complete {task.title} on {task.due_date}.", user_email)
 
-            if delta.days == 1:
-                send_email("1 days left", f"You have 1 days left to complete {task.title} on {task.due_date}.", current_user.email)
+        if delta.days == 0:
+            send_email(
+                "0 days left", f"Deadline for task {task.title} is today!", user_email)
 
-            if delta.days == 0:
-                send_email("0 days left", f"Deadline for task {task.title} is today!", current_user.email)
-        
-        return "Check completed."
+    return "Check completed."
+
 
 sched.add_job(check_and_send_email, 'interval', minutes=1)
 sched.start()
+
 
 @app.route('/logout')
 @login_required
@@ -199,7 +212,7 @@ def logout():
     flash("You have been logged out successfully!", 'success')
     return redirect(url_for('home'))
 
+
 # Run application
 if __name__ == '__main__':
     app.run(debug=True)
-

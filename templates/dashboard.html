@@ -3,10 +3,10 @@
 
 <section class='px-3'>
  
-    <section class='flex top-29 justify-around relative max-sm:items-center w-full max-sm:flex-col'>
+    <section class='flex flex-col top-29 justify-center items-center relative max-sm:items-center w-full max-sm:flex-col'>
 
         <section class='flex gap-5'>
-            <h3 class='text-center text-4xl'>Tasks</h3>
+            <h3 class='text-center text-4xl'>Task Management</h3>
 
             <form action="{{url_for('create_task')}}">
                 <button type='submit' class='transition-all text-center rounded-full w-12 h-12 text-3xl text-white bg-blue-600 hover:bg-blue-400 hover:scale-140 hover:text-4xl'>+</button>
@@ -50,70 +50,58 @@
         </section>
     </section>
  
-    <section class='grid grid-cols-5 gap-2 md:gap-15 mt-10 pb-10 relative top-60 z-0'>
+    <section class='grid grid-cols-5 max-sm:grid-cols-2 gap-2 mt-10 pb-10 relative top-60 z-0'>
  
  
             {% for task in tasks %}
                 {% if task.status == 'To Do' %}
-                    <section class='dark:bg-yellow-600 p-3 flex-1 rounded-xl min-w-1 shadow-2xl'>
-                        <ul class='list-none'>
-                            <li class='my-2 border-2 border-gray-300 p-1 rounded-md max-w-svw hover:border-white hover:scale-x-105 hover:scale-y-120 transition-discrete ease-in-out'>
-                                <section class='flex justify-between items-start'>
-                                    <ul class='overflow-clip '>
-                                        <li class='font-bold'>{{task.title}}</li>
-                                        <li>Status: {{task.status}}</li>
-                                        <li>Due: {{ task.due_date }}</li>
-                                        <li>Priority: {{task.priority}}</li>
-                                        <li>{{ task.description }}</li>
-                                    </ul>
-                                    <form method="DELETE" action="{{url_for('api_delete_task')}}" id="dlete_task" name='task_delete'>
-                                        <button type='submit'><img src="../static/icons8-bin.svg" alt="Delete task" class='w-9 h-10'></button>
-                                    </form>
-                                </section>
-                            </li>
-                        </ul>
+                    <section class='dark:bg-yellow-600 p-3 flex-1 rounded-xl shadow-2xl relative'>
+                        <section class='flex justify-between my-2 border-2 border-gray-300 p-1 rounded-md max-w-svw hover:border-white hover:scale-x-102 hover:scale-y-104 transition-discrete ease-linear'>
+                                <ul class='wrap-anywhere'>
+                                    <li class='font-bold mr-10'>{{task.title}}</li>
+                                    <li>Status: {{task.status}}</li>
+                                    <li>Due: {{ task.due_date }}</li>
+                                    <li>Priority: {{task.priority}}</li>
+                                    <li>{{ task.description }}</li>
+                                </ul>
+                                <form method="DELETE" action="{{url_for('api_delete_task')}}" name='task_delete' class='absolute right-3.5'>
+                                    <button type='submit'><img src="../static/icons8-bin.svg" alt="Delete task" class='w-9 h-10 max-sm:w-6 max-sm:h-8'></button>
+                                </form>
+                            </section>
                     </section>
                 {% endif %}
  
                 {% if task.status == 'In Progress' %}
-                    <section class='dark:bg-blue-300 p-3 flex-1 rounded-xl min-w-1 shadow-2xl'>
-                        <ul class='list-none'>
-                            <li class='my-2 border-2 border-gray-300 p-1 rounded-md max-w-svw hover:border-white hover:scale-x-105 hover:scale-y-120 transition-discrete ease-in-out'>
-                                <section class='flex justify-between'>
-                                    <ul class='overflow-clip '>
-                                        <li class='font-bold'>{{task.title}}</li>
-                                        <li>Status: {{task.status}}</li>
-                                        <li>Due: {{ task.due_date }}</li>
-                                        <li>Priority: {{task.priority}}</li>
-                                        <li>{{ task.description }}</li>
-                                    </ul>
-                                    <form action="{{url_for('api_delete_task')}}" name='task_delete'>
-                                        <button type='submit'><img src="../static/icons8-bin.svg" alt="Delete task" class='w-9 h-10'></button>
-                                    </form>
-                                </section>
-                            </li>
-                        </ul>
+                    <section class='dark:bg-blue-300 p-3 flex-1 rounded-xl shadow-2xl relative'>
+                        <section class='flex justify-between my-2 border-2 border-gray-300 p-1 rounded-md max-w-svw hover:border-white hover:scale-x-102 hover:scale-y-104 transition-discrete ease-linear'>
+                                <ul class='wrap-anywhere'>
+                                    <li class='font-bold mr-10'>{{task.title}}</li>
+                                    <li>Status: {{task.status}}</li>
+                                    <li>Due: {{ task.due_date }}</li>
+                                    <li>Priority: {{task.priority}}</li>
+                                    <li>{{ task.description }}</li>
+                                </ul>
+                                <form method="DELETE" action="{{url_for('api_delete_task')}}" name='task_delete' class='absolute right-3.5'>
+                                    <button type='submit'><img src="../static/icons8-bin.svg" alt="Delete task" class='w-9 h-10 max-sm:w-6 max-sm:h-8'></button>
+                                </form>
+                            </section>
                     </section>
                 {% endif %}
  
                 {% if task.status == 'Completed' %}
-                    <section class='dark:bg-green-300 p-3 flex-1 rounded-xl min-w-1 shadow-2xl'>
-                        <ul class='list-none'>
-                            <li class='my-2 border-2 border-gray-300 p-1 rounded-md max-w-svw hover:border-white hover:scale-x-105 hover:scale-y-120 transition-discrete ease-in-out'>
-                                <section class='flex justify-between'>
-                                    <ul class='overflow-clip '>
-                                        <li class='font-bold'>{{task.title}}</li>
-                                        <li>Status: {{task.status}}</li>
-                                        <li>Due: {{ task.due_date }}</li>
-                                        <li>Priority: {{task.priority}}</li>
-                                        <li>{{ task.description }}</li>
-                                    </ul>
-                                    <form method="DELETE" action="{{url_for('api_delete_task')}}" name='task_delete'>
-                                        <button type='submit'><img src="../static/icons8-bin.svg" alt="Delete task" class='w-9 h-10'></button>
-                                    </form>
-                                </section>
-                            </li>
-                        </ul>
+                    <section class='dark:bg-green-300 p-3 flex-1 rounded-xl shadow-2xl relative h-auto'>
+                        <section class='flex justify-between my-2 border-2 border-gray-300 p-1 rounded-md max-w-svw hover:border-white hover:scale-x-102 hover:scale-y-104 transition-discrete ease-linear'>
+                                <ul class='wrap-anywhere'>
+                                    <li class='font-bold mr-10'>{{task.title}}</li>
+                                    <li>Status: {{task.status}}</li>
+                                    <li>Due: {{ task.due_date }}</li>
+                                    <li>Priority: {{task.priority}}</li>
+                                    <li>{{ task.description }}</li>
+                                </ul>
+                                <form method="DELETE" action="{{url_for('api_delete_task')}}" name='task_delete' class='absolute right-3.5'>
+                                    <button type='submit'><img src="../static/icons8-bin.svg" alt="Delete task" class='w-9 h-10 max-sm:w-6 max-sm:h-8'></button>
+                                </form>
+                            </section>
                     </section>
                 {% endif %}
             {% endfor %}
