@@ -33,6 +33,10 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
+# Initialize BackgroundScheduler
+sched = BackgroundScheduler(daemon=True)
+
+# Load user 
 @login_manager.user_loader
 def load_user(user_id):
     """Load user by ID for Flask-Login"""
@@ -209,7 +213,7 @@ def edit_task(task_id):
         form.due_date.data = task.due_date
         form.status.data = task.status
         form.priority.data = task.priority
-        
+
     if form.validate_on_submit():
         # Update task fields
         task.title = form.title.data
@@ -223,3 +227,80 @@ def edit_task(task_id):
         return redirect(url_for('dashboard'))
 
     return render_template('edit_task.html', form=form, task=task)
+
+# Email notifications for expiring tasks
+def send_email(subject, body, to):
+    """
+    Send email via SMTP.
+
+    Args:
+        subject: Email subject
+        body: Email body text
+        to: Recipient email address
+    """
+    try:
+        mail_server = environ.get('MAIL_SERVER')
+        mail_port = environ.get('MAIL_PORT')
+        mail_username = environ.get('MAIL_USERNAME')
+        mail_password = environ.get('MAIL_PASSWORD')
+
+        # Check if email is configured
+        if not all([mail_server, mail_port, mail_username, mail_password]):
+            print("Email not configured. Skipping email notification.")
+            return
+
+        with smtplib.SMTP(mail_server, int(mail_port)) as server:
+            server.starttls()
+            server.login(mail_username, mail_password)
+            message = f"Subject:{subject}\n\n{body}"
+            server.sendmail(mail_username, to, message)
+            print(f"Email sent successfully to {to}")
+    except Exception as e:
+        print(f"Failed to send email: {e}")
+
+def check_and_send_email():
+    """
+    Background task to check for upcoming task deadlines.
+
+    Sends email notifications:
+    - 3 days before due date
+    - 1 day before due date
+    - On due date
+    """
+    with app.app_context():
+        try:
+            # Get all tasks from all users
+            tasks = db.session.query(Task).all()
+
+            for task in tasks:
+                task_due_date = task.due_date
+                curr_time = datetime.date.today()
+
+                delta = task_due_date - curr_time
+
+                # Get user email from task's user relationship
+                user_email = task.user.email
+
+                if delta.days == 3:
+                    send_email("3 days left",
+                             f"You have 3 days left to complete {task.title} on {task.due_date}.",
+                             user_email)
+
+                if delta.days == 1:
+                    send_email("1 day left",
+                             f"You have 1 day left to complete {task.title} on {task.due_date}.",
+                             user_email)
+
+                if delta.days == 0:
+                    send_email("Deadline Today",
+                             f"Deadline for task {task.title} is today!",
+                             user_email)
+
+        except Exception as e:
+            print(f"Error in check_and_send_email: {e}")
+
+        return "Check completed."
+
+# Schedule task to run every minute
+sched.add_job(check_and_send_email, 'interval', hours=12)
+sched.start()
