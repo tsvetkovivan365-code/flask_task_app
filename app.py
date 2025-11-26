@@ -108,6 +108,7 @@ def logout():
     flash("You have been logged out successfully!", 'success')
     return redirect(url_for('home'))
 
+# Dashboard route
 @app.route('/dashboard', methods=['GET'])
 @login_required
 def dashboard():
@@ -133,7 +134,7 @@ def dashboard():
 
     return render_template("dashboard.html", tasks=tasks)
 
-
+# Create task route
 @app.route('/create_task', methods=['GET', 'POST'])
 @login_required
 def create_task():
@@ -163,7 +164,8 @@ def create_task():
 
     return render_template("create_task.html", form=create_task_form)
 
-@app.route('/api/tasks/<int:task_id>', methods=['DELETE'])
+# DELETE task route
+@app.route('/api/tasks/<int:task_id>/delete', methods=['DELETE'])
 @login_required
 def api_delete_task(task_id):
     """
@@ -180,3 +182,44 @@ def api_delete_task(task_id):
     db.session.commit()
 
     return {'message': 'Task deleted successfully'}, 200
+
+# EDIT/UPDATE task route
+@app.route('/tasks/<int:task_id>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_task(task_id):
+    """
+    Edit task route with pre-populated form.
+
+    GET: Display edit form with existing task data
+    POST: Update task in database
+    """
+    # Query task and verify ownership
+    task = Task.query.filter_by(id=task_id, user_id=current_user.id).first()
+
+    if not task:
+        flash('Task not found', 'error')
+        return redirect(url_for('dashboard'))
+
+    form = CreateTaskForm()
+
+    # Pre-populate form with existing data
+    if request.method == 'GET':
+        form.title.data = task.title
+        form.description.data = task.description
+        form.due_date.data = task.due_date
+        form.status.data = task.status
+        form.priority.data = task.priority
+        
+    if form.validate_on_submit():
+        # Update task fields
+        task.title = form.title.data
+        task.description = form.description.data
+        task.due_date = form.due_date.data
+        task.status = form.status.data
+        task.priority = form.priority.data
+
+        db.session.commit()
+        flash('Task updated successfully!', 'success')
+        return redirect(url_for('dashboard'))
+
+    return render_template('edit_task.html', form=form, task=task)
