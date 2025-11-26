@@ -304,3 +304,33 @@ def check_and_send_email():
 # Schedule task to run every minute
 sched.add_job(check_and_send_email, 'interval', hours=12)
 sched.start()
+
+# CSV Export
+@app.route('/download_csv')
+@login_required
+def download_csv():
+    """
+    Export user's tasks to CSV file.
+
+    Returns:
+        CSV file download with all task data
+    """
+    s = io.StringIO()
+    cw = csv.writer(s)
+
+    # Write header row
+    cw.writerow(['ID', 'Title', 'Description', 'Status', 'Due Date', 'Priority'])
+
+    # Get all tasks for current user
+    tasks = Task.query.filter_by(user_id=current_user.id)
+
+    # Write task rows
+    for task in tasks:
+        cw.writerow([task.id, task.title, task.description, task.status,
+                    task.due_date, task.priority])
+
+    # Create CSV response
+    csv_data = Response(s.getvalue(), mimetype='text/csv')
+    csv_data.headers["Content-Disposition"] = "attachment; filename=tasks.csv"
+
+    return csv_data
