@@ -1,109 +1,144 @@
 {% extends "navbar.html" %}
 {% block body %}
 
-<section class='px-3'>
- 
-    <section class='flex flex-col top-29 justify-center items-center relative max-sm:items-center w-full max-sm:flex-col'>
+<section class='px-3 md:px-6 lg:px-8 pt-20 md:pt-24'>
 
-        <section class='flex gap-5'>
-            <h3 class='text-center text-4xl'>Task Management</h3>
-
+    <!-- Header Section -->
+    <section class='flex flex-col md:flex-row justify-between items-center w-full gap-4 mb-6'>
+        <!-- Title and Create Button -->
+        <section class='flex items-center gap-4'>
+            <h3 class='text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800'>Tasks</h3>
             <form action="{{url_for('create_task')}}">
-                <button type='submit' class='transition-all text-center rounded-full w-12 h-12 text-3xl text-white bg-blue-600 hover:bg-blue-400 hover:scale-140 hover:text-4xl'>+</button>
+                <button type='submit' class='transition-all text-center rounded-full w-10 h-10 md:w-12 md:h-12 text-2xl md:text-3xl text-white bg-blue-600 hover:bg-blue-500 hover:scale-110 shadow-lg'>+</button>
             </form>
         </section>
 
+        <!-- Export Button -->
         <section>
             <a href="/download_csv">
-                <button class='transition-all rounded-2xl px-10 py-4 text-white bg-blue-600 hover:bg-blue-400 hover:scale-110'>Export tasks</button>
+                <button class='transition-all rounded-lg px-6 md:px-10 py-2 md:py-3 text-sm md:text-base text-white bg-blue-600 hover:bg-blue-500 hover:scale-105 shadow-lg'>Export CSV</button>
             </a>
         </section>
     </section>
-    
-   
- 
-    <section class='relative flex gap-10 items-center justify-start top-58 w-full max-sm:flex-col max-sm:gap-2'>
-        <section>
-            <form method="GET" action="{{url_for('dashboard')}}" class='flex gap-5 items-center'>
-                <label for="selected_status" class='text-[20px]'>Status:</label>
-                <select name="selected_status" id="selected_status" onchange="this.form.submit()" class='max-sm:text-[18px] p-2 border focus:border-2 focus:border-black border-gray-300 rounded-lg'>
-                    <option class='max-sm:text-[12px]' value="">Select option</option>
-                    <option class='max-sm:text-[12px]' value="To Do" {% if selected_status == 'To Do' %} selected {% endif %}>To Do</option>
-                    <option class='max-sm:text-[12px]' value="In Progress" {% if selected_status == 'In Progress' %} selected {% endif %}>In Progress</option>
-                    <option class='max-sm:text-[12px]' value="Completed" {% if selected_status == 'Completed' %} selected {% endif %}>Completed</option>
+
+    <!-- Filters Section -->
+    <section class='flex flex-col sm:flex-row gap-4 mb-6 w-full'>
+        <section class='flex-1'>
+            <form method="GET" action="{{url_for('dashboard')}}" class='flex flex-col sm:flex-row gap-2 items-start sm:items-center'>
+                <label for="selected_status" class='text-sm md:text-base font-medium text-gray-700'>Status:</label>
+                <select name="selected_status" id="selected_status" onchange="this.form.submit()" class='flex-1 w-full sm:w-auto p-2 border focus:border-2 focus:border-blue-500 border-gray-300 rounded-lg text-sm md:text-base'>
+                    <option value="">All Statuses</option>
+                    <option value="To Do" {% if selected_status == 'To Do' %} selected {% endif %}>To Do</option>
+                    <option value="In Progress" {% if selected_status == 'In Progress' %} selected {% endif %}>In Progress</option>
+                    <option value="Completed" {% if selected_status == 'Completed' %} selected {% endif %}>Completed</option>
                 </select>
             </form>
-        </section>  
+        </section>
 
-        <section>
-            <form method="GET" action="{{url_for('dashboard')}}" class='flex gap-5 items-center'>
-                <label for="selected_priority" class='text-[20px]'>Priority:</label>
-                <select name="selected_priority" id="selected_priority" onchange="this.form.submit()" class='p-2 border focus:border-2 focus:border-black border-gray-300 rounded-lg'>
-                    <option class='max-sm:text-[12px]' value="">Select option</option>
-                    <option class='max-sm:text-[12px]' value="Low" {% if selected_priority == 'Low' %} selected {% endif %}>Low</option>
-                    <option class='max-sm:text-[12px]' value="Medium" {% if selected_priority == 'Medium' %} selected {% endif %}>Medium</option>
-                    <option class='max-sm:text-[12px]' value="High" {% if selected_priority == 'High' %} selected {% endif %}>High</option>
-                    <option class='max-sm:text-[12px]' value="Critical" {% if selected_priority == 'Critical' %} selected {% endif %}>Critical</option>
+        <section class='flex-1'>
+            <form method="GET" action="{{url_for('dashboard')}}" class='flex flex-col sm:flex-row gap-2 items-start sm:items-center'>
+                <label for="selected_priority" class='text-sm md:text-base font-medium text-gray-700'>Priority:</label>
+                <select name="selected_priority" id="selected_priority" onchange="this.form.submit()" class='flex-1 w-full sm:w-auto p-2 border focus:border-2 focus:border-blue-500 border-gray-300 rounded-lg text-sm md:text-base'>
+                    <option value="">All Priorities</option>
+                    <option value="Low" {% if selected_priority == 'Low' %} selected {% endif %}>Low</option>
+                    <option value="Medium" {% if selected_priority == 'Medium' %} selected {% endif %}>Medium</option>
+                    <option value="High" {% if selected_priority == 'High' %} selected {% endif %}>High</option>
+                    <option value="Critical" {% if selected_priority == 'Critical' %} selected {% endif %}>Critical</option>
                 </select>
             </form>
         </section>
     </section>
- 
-    <section class='grid grid-cols-5 max-sm:grid-cols-2 gap-2 mt-10 pb-10 relative top-60 z-0'>
+
+    <!-- Tasks Grid -->
+    <section class='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3 md:gap-4 pb-10'>
  
  
             {% for task in tasks %}
                 {% if task.status == 'To Do' %}
-                    <section class='dark:bg-yellow-600 p-3 flex-1 rounded-xl shadow-2xl relative'>
-                        <section class='flex justify-between my-2 border-2 border-gray-300 p-1 rounded-md max-w-svw hover:border-white hover:scale-x-102 hover:scale-y-104 transition-discrete ease-linear'>
-                                <ul class='wrap-anywhere'>
-                                    <li class='font-bold mr-10'>{{task.title}}</li>
-                                    <li>Status: {{task.status}}</li>
-                                    <li>Due: {{ task.due_date }}</li>
-                                    <li>Priority: {{task.priority}}</li>
-                                    <li>{{ task.description }}</li>
-                                </ul>
-                                <form method="DELETE" action="{{url_for('delete', task_id=task.id)}}" name='task_delete' class='absolute right-3.5'>
-                                    <button type='submit'><img src="../static/icons8-bin.svg" alt="Delete task" class='w-9 h-10 max-sm:w-6 max-sm:h-8'></button>
-                                </form>
+                    <section class='bg-yellow-100 dark:bg-yellow-600 p-4 rounded-xl shadow-lg hover:shadow-xl transition-all'>
+                        <section class='flex justify-between items-start gap-2'>
+                            <section class='flex-1 min-w-0'>
+                                <h4 class='font-bold text-base md:text-lg text-gray-800 truncate mb-2'>{{task.title}}</h4>
+                                <section class='space-y-1 text-xs md:text-sm text-gray-700'>
+                                    <p><span class='font-semibold'>Status:</span> {{task.status}}</p>
+                                    <p><span class='font-semibold'>Due:</span> {{ task.due_date }}</p>
+                                    <p><span class='font-semibold'>Priority:</span> <span class='px-2 py-1 rounded bg-gray-200'>{{task.priority}}</span></p>
+                                    <p class='wrap-break-word'>{{ task.description }}</p>
+                                </section>
+                            </section>
+                            <section class='flex flex-col gap-2 shrink-0'>
+                                <a href="{{url_for('edit_task', task_id=task.id)}}" class='text-blue-600 hover:text-blue-800' title="Edit task">
+                                    <svg class='w-5 h-5 md:w-6 md:h-6' fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                    </svg>
+                                </a>
+                                <button type="button" class='text-red-600 hover:text-red-800' title="Delete task">
+                                    <svg class='w-5 h-5 md:w-6 md:h-6' fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                    </svg>
+                                </button>
+                            </section>
                         </section>
                     </section>
                 {% endif %}
  
                 {% if task.status == 'In Progress' %}
-                    <section class='dark:bg-blue-300 p-3 flex-1 rounded-xl shadow-2xl relative'>
-                        <section class='flex justify-between my-2 border-2 border-gray-300 p-1 rounded-md max-w-svw hover:border-white hover:scale-x-102 hover:scale-y-104 transition-discrete ease-linear'>
-                                <ul class='wrap-anywhere'>
-                                    <li class='font-bold mr-10'>{{task.title}}</li>
-                                    <li>Status: {{task.status}}</li>
-                                    <li>Due: {{ task.due_date }}</li>
-                                    <li>Priority: {{task.priority}}</li>
-                                    <li>{{ task.description }}</li>
-                                </ul>
-                                <form method="DELETE" action="{{url_for('delete')}}" name='task_delete' class='absolute right-3.5'>
-                                    <button type='submit'><img src="../static/icons8-bin.svg" alt="Delete task" class='w-9 h-10 max-sm:w-6 max-sm:h-8'></button>
-                                </form>
+                    <section class='bg-blue-100 dark:bg-blue-300 p-4 rounded-xl shadow-lg hover:shadow-xl transition-all'>
+                        <section class='flex justify-between items-start gap-2'>
+                            <section class='flex-1 min-w-0'>
+                                <h4 class='font-bold text-base md:text-lg text-gray-800 truncate mb-2'>{{task.title}}</h4>
+                                <section class='space-y-1 text-xs md:text-sm text-gray-700'>
+                                    <p><span class='font-semibold'>Status:</span> {{task.status}}</p>
+                                    <p><span class='font-semibold'>Due:</span> {{ task.due_date }}</p>
+                                    <p><span class='font-semibold'>Priority:</span> <span class='px-2 py-1 rounded bg-gray-200'>{{task.priority}}</span></p>
+                                    <p class='break-words'>{{ task.description }}</p>
+                                </section>
                             </section>
+                            <section class='flex flex-col gap-2 flex-shrink-0'>
+                                <a href="{{url_for('edit_task', task_id=task.id)}}" class='text-blue-600 hover:text-blue-800' title="Edit task">
+                                    <svg class='w-5 h-5 md:w-6 md:h-6' fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                    </svg>
+                                </a>
+                                <button type="button" class='text-red-600 hover:text-red-800' title="Delete task">
+                                    <svg class='w-5 h-5 md:w-6 md:h-6' fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                    </svg>
+                                </button>
+                            </section>
+                        </section>
                     </section>
                 {% endif %}
  
                 {% if task.status == 'Completed' %}
-                    <section class='dark:bg-green-300 p-3 flex-1 rounded-xl shadow-2xl relative h-auto'>
-                        <section class='flex justify-between my-2 border-2 border-gray-300 p-1 rounded-md max-w-svw hover:border-white hover:scale-x-102 hover:scale-y-104 transition-discrete ease-linear'>
-                                <ul class='wrap-anywhere'>
-                                    <li class='font-bold mr-10'>{{task.title}}</li>
-                                    <li>Status: {{task.status}}</li>
-                                    <li>Due: {{ task.due_date }}</li>
-                                    <li>Priority: {{task.priority}}</li>
-                                    <li>{{ task.description }}</li>
-                                </ul>
-                                <form method="DELETE" action="{{url_for('delete')}}" name='task_delete' class='absolute right-3.5'>
-                                    <button type='submit'><img src="../static/icons8-bin.svg" alt="Delete task" class='w-9 h-10 max-sm:w-6 max-sm:h-8'></button>
-                                </form>
+                    <section class='bg-green-100 dark:bg-green-300 p-4 rounded-xl shadow-lg hover:shadow-xl transition-all'>
+                        <section class='flex justify-between items-start gap-2'>
+                            <section class='flex-1 min-w-0'>
+                                <h4 class='font-bold text-base md:text-lg text-gray-800 truncate mb-2'>{{task.title}}</h4>
+                                <section class='space-y-1 text-xs md:text-sm text-gray-700'>
+                                    <p><span class='font-semibold'>Status:</span> {{task.status}}</p>
+                                    <p><span class='font-semibold'>Due:</span> {{ task.due_date }}</p>
+                                    <p><span class='font-semibold'>Priority:</span> <span class='px-2 py-1 rounded bg-gray-200'>{{task.priority}}</span></p>
+                                    <p class='wrap-break-word'>{{ task.description }}</p>
+                                </section>
                             </section>
+                            <section class='flex flex-col gap-2 shrink-0'>
+                                <a href="{{url_for('edit_task', task_id=task.id)}}" class='text-blue-600 hover:text-blue-800' title="Edit task">
+                                    <svg class='w-5 h-5 md:w-6 md:h-6' fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                    </svg>
+                                </a>
+                                <button type="button" class='text-red-600 hover:text-red-800' title="Delete task">
+                                    <svg class='w-5 h-5 md:w-6 md:h-6' fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                    </svg>
+                                </button>
+                            </section>
+                        </section>
                     </section>
                 {% endif %}
             {% endfor %}
     </section>
-   
+
+
 {% endblock %}
