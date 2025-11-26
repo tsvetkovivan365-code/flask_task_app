@@ -64,7 +64,7 @@
                                     <li>Priority: {{task.priority}}</li>
                                     <li>{{ task.description }}</li>
                                 </ul>
-                                <form method="DELETE" action="{{url_for('api_delete_task')}}" name='task_delete' class='absolute right-3.5'>
+                                <form method="DELETE" action="{{url_for('delete', task_id=task.id)}}" name='task_delete' class='absolute right-3.5'>
                                     <button type='submit'><img src="../static/icons8-bin.svg" alt="Delete task" class='w-9 h-10 max-sm:w-6 max-sm:h-8'></button>
                                 </form>
                             </section>
@@ -81,7 +81,7 @@
                                     <li>Priority: {{task.priority}}</li>
                                     <li>{{ task.description }}</li>
                                 </ul>
-                                <form method="DELETE" action="{{url_for('api_delete_task')}}" name='task_delete' class='absolute right-3.5'>
+                                <form method="DELETE" action="{{url_for('delete')}}" name='task_delete' class='absolute right-3.5'>
                                     <button type='submit'><img src="../static/icons8-bin.svg" alt="Delete task" class='w-9 h-10 max-sm:w-6 max-sm:h-8'></button>
                                 </form>
                             </section>
@@ -98,7 +98,7 @@
                                     <li>Priority: {{task.priority}}</li>
                                     <li>{{ task.description }}</li>
                                 </ul>
-                                <form method="DELETE" action="{{url_for('api_delete_task')}}" name='task_delete' class='absolute right-3.5'>
+                                <form method="DELETE" action="{{url_for('delete')}}" name='task_delete' class='absolute right-3.5'>
                                     <button type='submit'><img src="../static/icons8-bin.svg" alt="Delete task" class='w-9 h-10 max-sm:w-6 max-sm:h-8'></button>
                                 </form>
                             </section>

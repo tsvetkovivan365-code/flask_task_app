@@ -1,27 +1,44 @@
 {% extends "navbar.html" %}
 {% block body %}
-<section class='px-3 absolute top-29 w-full'>
-    <section class='bg-white p-8 rounded-xl shadow-2xl mx-auto max-w-lg my-25'>
-        <h2 class='text-center text-4xl mb-10'>Create new task</h2>
-        <form method='POST' class='flex flex-col items-center' action="{{url_for('create_task')}}">
-            <section class='grid grid-cols-2 gap-x-13.5'>
-                {{ form.csrf_token }}
-                <section>
-                    {{ form.title.label(class="block text-sm font-medium text-gray-700 mb-1") }}
-                    {{ form.title(class="w-full p-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-6") }}
-                    {{ form.description.label(class="block text-sm font-medium text-gray-700 mb-1") }}
-                    {{ form.description(class="w-full p-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-6") }}
+<section class='px-4 md:px-6 pt-20 md:pt-24 w-full min-h-screen flex items-center justify-center'>
+    <section class='bg-white p-6 md:p-8 rounded-xl shadow-2xl w-full max-w-2xl'>
+        <h2 class='text-center text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 mb-6 md:mb-8'>Create New Task</h2>
+        <form method='POST' action="{{url_for('create_task')}}">
+            {{ form.csrf_token }}
+            <section class='grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6'>
+                <!-- Left Column -->
+                <section class='space-y-4'>
+                    <section>
+                        {{ form.title.label(class="block text-sm font-medium text-gray-700 mb-2") }}
+                        {{ form.title(class="w-full p-2.5 md:p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500") }}
+                    </section>
+                    <section>
+                        {{ form.description.label(class="block text-sm font-medium text-gray-700 mb-2") }}
+                        {{ form.description(class="w-full p-2.5 md:p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 h-24") }}
+                    </section>
                 </section>
-                <section>
-                    {{ form.due_date.label(class="block text-sm font-medium text-gray-700 mb-1") }}
-                    {{ form.due_date(class="w-full p-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-6") }}
-                    {{ form.status.label(class="block text-sm font-medium text-gray-700 mb-1") }}
-                    {{ form.status(class="w-full p-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-6") }}
-                    {{ form.priority.label(class="block text-sm font-medium text-gray-700 mb-1") }}
-                    {{ form.priority(class="w-full p-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-6") }}
+
+                <!-- Right Column -->
+                <section class='space-y-4'>
+                    <section>
+                        {{ form.due_date.label(class="block text-sm font-medium text-gray-700 mb-2") }}
+                        {{ form.due_date(class="w-full p-2.5 md:p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500") }}
+                    </section>
+                    <section>
+                        {{ form.status.label(class="block text-sm font-medium text-gray-700 mb-2") }}
+                        {{ form.status(class="w-full p-2.5 md:p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500") }}
+                    </section>
+                    <section>
+                        {{ form.priority.label(class="block text-sm font-medium text-gray-700 mb-2") }}
+                        {{ form.priority(class="w-full p-2.5 md:p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500") }}
+                    </section>
                 </section>
             </section>
-            <button type='submit' class='w-3xs bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200 shadow-lg mt-6'>Create</button>
+
+            <section class='flex flex-col sm:flex-row gap-3 mt-6'>
+                <button type='submit' class='flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200 shadow-lg'>Create Task</button>
+                <a href="{{url_for('dashboard')}}" class='flex-1 bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition duration-200 shadow-lg text-center'>Cancel</a>
+            </section>
         </form>
     </section>
 </section>
