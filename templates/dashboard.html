@@ -13,7 +13,6 @@
             </form>
         </section>
 
-    
         <section>
             <a href="/download_csv">
                 <button class='transition-all rounded-2xl px-10 py-4 text-white bg-blue-600 hover:bg-blue-400 hover:scale-110'>Export tasks</button>
@@ -67,7 +66,7 @@
                                 <form method="DELETE" action="{{url_for('delete', task_id=task.id)}}" name='task_delete' class='absolute right-3.5'>
                                     <button type='submit'><img src="../static/icons8-bin.svg" alt="Delete task" class='w-9 h-10 max-sm:w-6 max-sm:h-8'></button>
                                 </form>
-                            </section>
+                        </section>
                     </section>
                 {% endif %}
  
