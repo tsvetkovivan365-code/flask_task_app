@@ -3,37 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/main.css')}}">
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>Task Management App</title>
 </head>
 <body class="bg-gray-300 min-h-screen font-sans">
 
-    <header class='fixed top-0 w-full z-10 shadow-md dark:shadow-none'>
-        <nav class="shadow-xl dark:bg-orange-400">
-            <ul class="flex justify-center gap-x-15.5 text-2xl items-center h-16">
-                    <li class="text-gray-700 dark:border-b-4 hover:shadow-xl rounded-md font-medium transition duration-200"><a href="{{ url_for('home') }}">
-                        Home
-                    </a></li>
-                    <li class="text-gray-700 dark:border-b-4 hover:shadow-xl rounded-md font-medium transition duration-200"><a href="{{ url_for('dashboard') }}">
-                        Dashboard
-                    </a></li>
-                {% if current_user.is_authenticated %}
-                    <section class="flex items-center space-x-2" >
-                        <li class="text-gray-700 dark:border-b-4 hover:shadow-xl rounded-md font-medium transition duration-200"><a href="{{ url_for('logout') }}">
-                            Logout
-                        </a></li>
-                    </section>
-                {% else %}
-                    <li class="text-gray-700 dark:border-b-4 hover:shadow-xl rounded-md font-medium transition duration-200"><a href="{{ url_for('login') }}">
-                        Login / Register
-                    </a></li>
-                {% endif %}
-            </ul>
+    <header class='fixed top-0 w-full z-10 shadow-md bg-white'>
+        <nav class="shadow-xl">
+            <section class="flex justify-between items-center h-16 px-4 md:px-8">
+                <!-- Logo/Brand -->
+                <section class="text-2xl font-bold text-gray-700">
+                    <a href="{{ url_for('home') }}">TaskManager</a>
+                </section>
+
+                <!-- Desktop Menu -->
+                <ul class="hidden md:flex gap-x-8 text-lg items-center">
+                    <li class="text-gray-700 hover:text-blue-600 font-medium transition duration-200">
+                        <a href="{{ url_for('home') }}">Home</a>
+                    </li>
+                    <li class="text-gray-700 hover:text-blue-600 font-medium transition duration-200">
+                        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+                    </li>
+                    {% if current_user.is_authenticated %}
+                        <li class="text-gray-700 hover:text-blue-600 font-medium transition duration-200">
+                            <a href="{{ url_for('logout') }}">Logout</a>
+                        </li>
+                    {% else %}
+                        <li class="text-gray-700 hover:text-blue-600 font-medium transition duration-200">
+                            <a href="{{ url_for('login') }}">Login / Register</a>
+                        </li>
+                    {% endif %}
+                </ul>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="md:hidden text-gray-700 focus:outline-none">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path id="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        <path id="close-icon" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </section>
+
+            <!-- Mobile Menu -->
+            <section id="mobile-menu" class="hidden md:hidden bg-white shadow-lg">
+                <ul class="flex flex-col space-y-2 p-4">
+                    <li class="text-gray-700 hover:bg-gray-100 rounded-md p-2 font-medium transition duration-200">
+                        <a href="{{ url_for('home') }}">Home</a>
+                    </li>
+                    <li class="text-gray-700 hover:bg-gray-100 rounded-md p-2 font-medium transition duration-200">
+                        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+                    </li>
+                    {% if current_user.is_authenticated %}
+                        <li class="text-gray-700 hover:bg-gray-100 rounded-md p-2 font-medium transition duration-200">
+                            <a href="{{ url_for('logout') }}">Logout</a>
+                        </li>
+                    {% else %}
+                        <li class="text-gray-700 hover:bg-gray-100 rounded-md p-2 font-medium transition duration-200">
+                            <a href="{{ url_for('login') }}">Login / Register</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </section>
         </nav>
     </header>
-    
+
     {% block body %}{% endblock %}
-    
-    
+
+    <script>
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIcon = document.getElementById('menu-icon');
+        const closeIcon = document.getElementById('close-icon');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            menuIcon.classList.toggle('hidden');
+            closeIcon.classList.toggle('hidden');
+        });
+    </script>
+
 </body>
 </html>
