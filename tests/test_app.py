@@ -297,7 +297,14 @@ class TestMangementTestCase(unittest.TestCase):
             self.assertEqual(len(user1_tasks), 3)
             self.assertEqual(len(user2_tasks), 1)
 
-    
+    # Test 9: Authentication Protection - Unauthenticated Access
+    def test_dashboard_requires_authentication(self):
+        """Test that dashboard requires authentication"""
+        response = self.client.get('/dashboard', follow_redirects=False)
+
+        # Should redirect to login
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('/login', response.location)
         
         
         
