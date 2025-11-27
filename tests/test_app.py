@@ -254,12 +254,12 @@ class TestMangementTestCase(unittest.TestCase):
             user1 = User(
                 username='user1',
                 email='user1@example.com',
-                password=generate_password_hash('password123')
+                password=generate_password_hash('Password123')
             )
             user2 = User(
                 username='user2',
                 email='user2@example.com',
-                password=generate_password_hash('password123')
+                password=generate_password_hash('Password123')
             )
             db.session.add(user1)
             db.session.add(user2)
@@ -306,7 +306,45 @@ class TestMangementTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertIn('/login', response.location)
         
-        
-        
+
+    # Test 10: Task Filtering by Status
+    def test_task_filtering_by_status(self):
+        """Test filtering tasks by status"""
+        # Create user and tasks with different statuses
+        with app.app_context():
+            user = User(
+                username='filteruser',
+                email='filter@example.com',
+                password=generate_password_hash('Password123')
+            )
+            db.session.add(user)
+            db.session.commit()
+
+            statuses = ['To Do', 'In Progress', 'Completed']
+            for status in statuses:
+                for i in range(2):
+                    task = Task(
+                        title=f'{status} Task {i+1}',
+                        description=f'Task with status {status}',
+                        due_date=date.today() + timedelta(days=i+1),
+                        status=status,
+                        priority='Medium',
+                        user_id=user.id
+                    )
+                    db.session.add(task)
+                db.session.commit()
+
+            # Query tasks by status
+            todo_tasks = Task.query.filter_by(user_id=user.id, status='To Do').all()
+            in_progress_tasks = Task.query.filter_by(user_id=user.id, status='In Progress').all()
+            completed_tasks = Task.query.filter_by(user_id=user.id, status='Completed').all()
+
+            # Verify filtering works correctly
+            self.assertEqual(len(todo_tasks), 2)
+            self.assertEqual(len(in_progress_tasks), 2)
+            self.assertEqual(len(completed_tasks), 2)
+
+if __name__ == '__main__':
+    unittest.main()
 
 

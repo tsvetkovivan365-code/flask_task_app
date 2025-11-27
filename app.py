@@ -334,3 +334,7 @@ def download_csv():
     csv_data.headers["Content-Disposition"] = "attachment; filename=tasks.csv"
 
     return csv_data
+
+# Run application
+if __name__ == '__main__':
+    app.run(debug=True)
