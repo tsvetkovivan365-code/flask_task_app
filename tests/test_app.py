@@ -245,6 +245,59 @@ class TestMangementTestCase(unittest.TestCase):
         with app.app_context:
             deleted_task = Task.query.get(task_id)
             self.assertIsNone(deleted_task)
+
+    # Test 8: Database Query - Retrieving Tasks for a User
+    def test_retrieve_user_tasks(self):
+        """Test retrieving all tasks for a specific user"""
+        # Create users and tasks
+        with app.app_context():
+            user1 = User(
+                username='user1',
+                email='user1@example.com',
+                password=generate_password_hash('password123')
+            )
+            user2 = User(
+                username='user2',
+                email='user2@example.com',
+                password=generate_password_hash('password123')
+            )
+            db.session.add(user1)
+            db.session.add(user2)
+            db.session.commit()
+
+            # Create tasks for user1
+            for i in range(3):
+                task = Task(
+                    title=f'User1 Task {i+1}',
+                    description=f'Task {i+1} for user1',
+                    due_date=date.today() + timedelta(days=i+1),
+                    status='To Do',
+                    priority='Medium',
+                    user_id=user1.id
+                )
+                db.session.add(task)
+
+            # Create task for user2
+            task = Task(
+                title='User2 Task',
+                description='Task for user2',
+                due_date=date.today() + timedelta(days=1),
+                status='To Do',
+                priority='Low',
+                user_id=user2.id
+            )
+            db.session.add(task)
+            db.session.commit()
+
+            # Query user's tasks
+            user1_tasks = Task.query.filter_by(user_id=user1.id).all()
+            user2_tasks = Task.query.filter_by(user_id=user2.id).all()
+
+            # Verify correct number of tasks
+            self.assertEqual(len(user1_tasks), 3)
+            self.assertEqual(len(user2_tasks), 1)
+
+    
         
         
         
