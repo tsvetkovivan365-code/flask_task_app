@@ -29,3 +29,26 @@ class TestMangementTestCase(unittest.TestCase):
         with app.app_context():
             db.session.remove()
             db.drop_all()
+
+    # Test 1: User Registrtion with valid inputs
+    def test_user_registration_valid(self):
+        """Test user registration with valid username, email, password"""
+        response = self.client.post('/register', data={
+            'username'='testuser',
+            'email'='test@example.com',
+            'password'='Password1234'
+        }, follow_redirects=False)
+
+        # Should redirect to login page after successful registration
+        self.assertEqual(response.status_code, 302)
+
+        # Verify user was  created in database
+        with app.app_context():
+            user = User.query.filter_by(username='testuser').first()
+            self.assertIsNotNone(user)
+            self.assertEqual(user.email, 'test@example.com')
+
+        
+        
+
+
