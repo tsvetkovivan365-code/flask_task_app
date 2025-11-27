@@ -34,9 +34,9 @@ class TestMangementTestCase(unittest.TestCase):
     def test_user_registration_valid(self):
         """Test user registration with valid username, email, password"""
         response = self.client.post('/register', data={
-            'username'='testuser',
-            'email'='test@example.com',
-            'password'='Password1234'
+            'username': 'testuser',
+            'email': 'test@example.com',
+            'password': 'Password1234'
         }, follow_redirects=False)
 
         # Should redirect to login page after successful registration
