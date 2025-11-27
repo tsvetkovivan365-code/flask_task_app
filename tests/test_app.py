@@ -157,6 +157,54 @@ class TestMangementTestCase(unittest.TestCase):
             self.assertEqual(task.title, 'Test task')
             self.assertEqual(task.priority, 'High')
 
+    # Test 6: Task Update
+    def test_task_update(self):
+        """Test updating an existing task"""
+        # Create user and task
+        with app.app_context():
+            user = User(
+                username='updateuser',
+                email='update@example.com',
+                password=generate_password_hash('Password123')
+            )
+            db.session.add(user)
+            db.session.commit()
+
+            task = Task(
+                title='Original Title',
+                description='Original Description',
+                due_date=date.today() + timedelta(days=7),
+                status='To Do',
+                priority='Low',
+                user_id=user.id
+            )
+            db.session.add(task)
+            db.session.commit()
+            task_id = task.id
+
+        # Login
+        self.client.post('/login', data={
+            'username': 'updateuser',
+            'password': 'Password123'
+        })
+
+        # Update task
+        response = self.client.post(f'/tasks/{task_id}/edit', data={
+            'title': 'Updated Title',
+            'description': 'Updated Description',
+            'due_date': str(date.today() + timedelta(days=14)),
+            'status': 'In Progress',
+            'priority': 'High'
+        }, follow_redirects=False)
+
+        # Verify task was updated
+        with app.app_context():
+            updated_task = Task.query.get(task_id)
+            self.assertEqual(updated_task.title, 'Updated Title')
+            self.assertEqual(updated_task.status, 'In Progress')
+            self.assertEqual(updated_task.priority, 'High')
+
+    
         
         
         
