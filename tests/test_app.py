@@ -154,7 +154,7 @@ class TestMangementTestCase(unittest.TestCase):
         with app.app_context():
             task = Task.query.filter_by(user_id=user_id).first()
             self.assertIsNotNone(task)
-            self.assertEqual(task.title, 'Test task')
+            self.assertEqual(task.title, 'Test Task')
             self.assertEqual(task.priority, 'High')
 
     # Test 6: Task Update
@@ -235,14 +235,14 @@ class TestMangementTestCase(unittest.TestCase):
             'password': 'Password123'
         })
 
-        # Delete a task
+        # Delete task
         response = self.client.delete(f'/api/tasks/{task_id}/delete')
 
         # Should return success
         self.assertEqual(response.status_code, 200)
 
-        # Verify task has been deleted
-        with app.app_context:
+        # Verify task was deleted
+        with app.app_context():
             deleted_task = Task.query.get(task_id)
             self.assertIsNone(deleted_task)
 

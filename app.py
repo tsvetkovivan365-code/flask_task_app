@@ -42,6 +42,10 @@ def load_user(user_id):
     """Load user by ID for Flask-Login"""
     return User.query.get(int(user_id))
 
+@app.route('/')
+def home():
+    return render_template("home.html")
+
 # Registration route
 @app.route('/register', methods=['GET', 'POST'])
 def register():
