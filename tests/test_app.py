@@ -48,6 +48,29 @@ class TestMangementTestCase(unittest.TestCase):
             self.assertIsNotNone(user)
             self.assertEqual(user.email, 'test@example.com')
 
+
+    # Test 2: User Registrtion with invalid inputs(diplicate name)
+    def test_user_registration_duplicate_name(self):
+        """Test user registration failure when username already exists"""
+        # Create user in database
+        with app.app_context():
+            user = User(
+                username='existinguser',
+                email='existing@example.com',
+                password=generate_password_hash('Password123')
+            )
+
+        # Try to register user with same username
+        response = self.client.post('/register', data={
+            'username': 'existinguser',
+            'email': 'newuser@example.com',
+            'password': 'Password1234'
+        }, follow_redirects=True)
+
+        # Should show error message
+        self.assertIn('Username already exists', response.data)
+
+        
         
         
 
