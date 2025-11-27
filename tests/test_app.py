@@ -204,7 +204,47 @@ class TestMangementTestCase(unittest.TestCase):
             self.assertEqual(updated_task.status, 'In Progress')
             self.assertEqual(updated_task.priority, 'High')
 
-    
+    # Test 7: Task Deletion
+    def test_task_deletion(self):
+        """Test deleting a task via API endpoint"""
+        # Create user and task
+        with app.app_context():
+            user = User(
+                username='deleteuser',
+                email='delete@example.com',
+                password=generate_password_hash('Password123')
+            )
+            db.session.add(user)
+            db.session.commit()
+
+            task = Task(
+                title='Task to Delete',
+                description='This task will be deleted',
+                due_date=date.today() + timedelta(days=7),
+                status='To Do',
+                priority='Low',
+                user_id=user.id
+            )
+            db.session.add(task)
+            db.session.commit()
+            task_id = task.id
+
+        # Login
+        self.client.post('/login', data={
+            'username': 'deleteuser',
+            'password': 'Password123'
+        })
+
+        # Delete a task
+        response = self.client.delete(f'/api/tasks/{task_id}/delete')
+
+        # Should return success
+        self.assertEqual(response.status_code, 200)
+
+        # Verify task has been deleted
+        with app.app_context:
+            deleted_task = Task.query.get(task_id)
+            self.assertIsNone(deleted_task)
         
         
         
