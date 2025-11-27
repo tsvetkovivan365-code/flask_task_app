@@ -93,7 +93,28 @@ class TestMangementTestCase(unittest.TestCase):
         # Should redirect to dashboard
         self.assertEqual(response.status_code, 302)
 
-        
+    # Test 4: User Login - Failed attempt(wrong password)
+    def test_user_login_failed(self):
+        """Test failed user login with incorrect password"""
+
+        # Create user in database
+        with app.app_context():
+            user = User(
+                username='testloginuser',
+                email='testlogin@example.com',
+                password=generate_password_hash('Password123')
+            )
+            db.session.add(user)
+            db.session.commit()
+
+        # Attempt login with wrong password
+        response = self.client.post('/login', data={
+            'username': 'testloginuser',
+            'password': 'password'
+        }, follow_redirects=True)
+
+        # Should show error message
+        self.assertIn('Invalid username or password', response.data)
 
         
         
