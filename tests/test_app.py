@@ -68,7 +68,7 @@ class TestMangementTestCase(unittest.TestCase):
         }, follow_redirects=True)
 
         # Should show error message
-        self.assertIn('Username already exists', response.data)
+        self.assertIn(b'Username already exists', response.data)
 
     # Test 3: User Login - Successful attempt
     def test_user_login_success(self):
@@ -114,7 +114,48 @@ class TestMangementTestCase(unittest.TestCase):
         }, follow_redirects=True)
 
         # Should show error message
-        self.assertIn('Invalid username or password', response.data)
+        self.assertIn(b'Invalid username or password', response.data)
+
+    # Test 5: Task Creation
+    def test_task_creation(self):
+        """Test creating a new task for authenticated user"""
+
+        # Create logged in user
+        with app.app_context():
+            user = User(
+                username='taskuser',
+                email='task@example.com',
+                password=generate_password_hash('Password123')
+            )
+
+            db.session.add(user)
+            db.session.commit()
+            user_id = user.id
+        
+        # Login
+        self.client.post('/login', data={
+            'username': 'taskuser',
+            'password': 'Password123'
+        })
+
+        # Create task
+        response = self.client.post('/create_task', data={
+            'title': 'Test Task',
+            'description': 'This is a test task',
+            'due_date': str(date.today() + timedelta(days=7)),
+            'status': 'To Do',
+            'priority': 'High'
+        }, follow_redirects=False)
+
+        # Should redirect to dashboard
+        self.assertEqual(response.status_code, 302)
+
+        # Verify task was created
+        with app.app_context():
+            task = Task.query.filter_by(user_id=user_id).first()
+            self.assertIsNotNone(task)
+            self.assertEqual(task.title, 'Test task')
+            self.assertEqual(task.priority, 'High')
 
         
         
