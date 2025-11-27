@@ -70,6 +70,31 @@ class TestMangementTestCase(unittest.TestCase):
         # Should show error message
         self.assertIn('Username already exists', response.data)
 
+    # Test 3: User Login - Successful attempt
+    def test_user_login_success(self):
+        """Test successful user login with correct credentials"""
+
+        # Create user in database
+        with app.app_context():
+            user = User(
+                username='testloginuser',
+                email='testlogin@example.com',
+                password=generate_password_hash('Password123')
+            )
+            db.session.add(user)
+            db.session.commit()
+
+        # Attempt login
+        response = self.client.post('/login', data={
+            'username': 'testloginuser',
+            'password': 'Password123'
+        }, follow_redirects=False)
+
+        # Should redirect to dashboard
+        self.assertEqual(response.status_code, 302)
+
+        
+
         
         
         
