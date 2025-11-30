@@ -2,7 +2,7 @@ import unittest
 import sys
 import os
 from datetime import date, timedelta
-from flask_app import app
+from app import app
 from database import db, User, Task
 from werkzeug.security import generate_password_hash
 
