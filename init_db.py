@@ -1,4 +1,4 @@
-from app import app
+from flask_app import app
 from database import db
 
 with app.app_context():
