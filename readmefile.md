@@ -68,10 +68,26 @@ git clone https://github.com/tsvetkovivan365-code/flask_task_app.git
 
 ```
 
+### 1.4 Install dependencies
+
 Install:
 ```
 pip install -r requirements.txt
 
+```
+
+### 1.5 Create Environment Variables File
+
+Create `.env` in the root directory:
+
+```
+SECRET_KEY=your-super-secret-key-change-this-in-production-12345
+
+# Mail settings (optional - for email notifications)
+MAIL_SERVER=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME=your-email@gmail.com
+MAIL_PASSWORD=your-app-password
 ```
 
 ### 1.4 Project Structure
